@@ -485,6 +485,14 @@ def should_generate_step(step: int, start_step: int, end_step: int, limit_thread
     return True
 
 
+def is_llm_generated_thread(thread: dict[str, Any], existing_messages: list[dict[str, Any]]) -> bool:
+    if thread.get("summary_source") != "llm_summary":
+        return False
+    if not existing_messages:
+        return False
+    return all(str(message.get("source", "")) == "llm" for message in existing_messages)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate habitat conversations with LLM history.")
     parser.add_argument("--pack", type=Path, required=True)
@@ -496,6 +504,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--end-step", type=int, default=50)
     parser.add_argument("--limit-threads", type=int, default=None, help="Generate only N threads for smoke testing")
     parser.add_argument("--history-size", type=int, default=12)
+    parser.add_argument(
+        "--only-non-llm",
+        action="store_true",
+        help="Generate only threads that are not already fully marked as LLM output",
+    )
     parser.add_argument("--mock", action="store_true", help="Do not call LLM; copy scripted rows and mark manifest only")
     parser.add_argument("--fail-on-error", action="store_true")
     return parser.parse_args()
@@ -580,7 +593,10 @@ def main() -> None:
         step = to_int(thread.get("step"), 0)
         existing = messages_by_conversation.get(thread.get("conversation_id", ""), [])
         generated_this_thread = False
-        if not args.mock and should_generate_step(step, args.start_step, args.end_step, args.limit_threads, generated):
+        should_generate = should_generate_step(step, args.start_step, args.end_step, args.limit_threads, generated)
+        if args.only_non_llm and is_llm_generated_thread(thread, existing):
+            should_generate = False
+        if not args.mock and should_generate:
             prompt = build_prompt(
                 thread,
                 existing,

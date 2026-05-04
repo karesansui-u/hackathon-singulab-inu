@@ -2,17 +2,16 @@
   "run_a": {
     "run_dir": "outputs/runs/iss20_no_nudge_100_ui_llm",
     "data_source": "messages_jsonl",
-    "proxy_metrics": true,
+    "proxy_metrics": false,
     "fallback_used": false,
     "message_source_counts": {
-      "llm": 439,
-      "scripted": 46
+      "llm": 485
     },
-    "llm_message_count": 439,
-    "scripted_message_count": 46,
+    "llm_message_count": 485,
+    "scripted_message_count": 0,
     "step_window": {
-      "start_step": 1,
-      "end_step": 100
+      "start_step": "",
+      "end_step": ""
     },
     "total_messages": 485,
     "unique_interaction_pairs": 54,
@@ -76,8 +75,7 @@
       "ISS18": 8,
       "ISS19": 5
     },
-    "reasoning_entries_by_agent": {},
-    "note": "messages.jsonl に source=llm と source=scripted が混在しているため、KPIは部分的にプロキシを含む。全threadをLLM化したrunで本集計する。"
+    "reasoning_entries_by_agent": {}
   },
   "run_b": {
     "run_dir": "outputs/runs/iss20_nudge_100_ui_llm",
@@ -90,8 +88,8 @@
     "llm_message_count": 389,
     "scripted_message_count": 0,
     "step_window": {
-      "start_step": 1,
-      "end_step": 100
+      "start_step": "",
+      "end_step": ""
     },
     "total_messages": 389,
     "unique_interaction_pairs": 60,

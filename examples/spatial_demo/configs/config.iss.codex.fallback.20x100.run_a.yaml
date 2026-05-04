@@ -1,0 +1,20 @@
+# ISS 20-agent / 100-step Run A fallback conversation generation.
+#
+# Used only when the primary fast model hits a transient limit and a small
+# number of remaining scripted fallback threads need to be converted to LLM rows.
+
+llm:
+  provider: "command"
+  model: "codex-cli:gpt-5.4-mini"
+  command:
+    - "./scripts/run_codex_prompt.sh"
+  prompt_mode: "stdin"
+  response_format: "text"
+  timeout_seconds: 300
+  max_retries: 1
+  retry_backoff_seconds: 2
+  env:
+    CODEX_MODEL: "gpt-5.4-mini"
+    CODEX_REASONING_EFFORT: "low"
+    CODEX_SANDBOX: "read-only"
+    CODEX_IGNORE_USER_CONFIG: "true"

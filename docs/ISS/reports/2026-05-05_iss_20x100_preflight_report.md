@@ -48,6 +48,7 @@ Recommended report wording:
 
 - Inference backend: Codex CLI command backend
 - GPT inference model: `gpt-5.3-codex-spark`
+- Fallback completion model: `gpt-5.4-mini` for 23 late Run A threads after the primary model hit its usage limit
 - Reasoning setting: `model_reasoning_effort=low`
 - Sandbox setting: `read-only`
 - Codex user config: ignored for simulation generation (`CODEX_IGNORE_USER_CONFIG=true`)
@@ -102,12 +103,14 @@ GPT probe:
 
 Full GPT/Codex generation:
 
-- Model: `gpt-5.3-codex-spark`
+- Primary model: `gpt-5.3-codex-spark`
+- Fallback model: `gpt-5.4-mini`
 - Reasoning effort: `low`
 - Run A directory: `outputs/runs/iss20_no_nudge_100_ui_llm`
-- Run A result: 193 threads, 170 LLM-generated threads, 23 scripted fallback threads
-- Run A messages: 485 total, 439 `source=llm`, 46 `source=scripted`
-- Run A caveat: Codex CLI repeatedly returned empty/failed output during late steps 88-100; fallback rows were retained for those affected threads.
+- Run A result: 193 threads, 193 LLM-generated threads, 0 failed threads
+- Run A model split: 170 threads with `gpt-5.3-codex-spark`, 23 late-step threads with `gpt-5.4-mini`
+- Run A messages: 485 total, 485 `source=llm`, 0 `source=scripted`
+- Run A caveat: `gpt-5.3-codex-spark` reached its usage limit during late steps 88-100, so the remaining 23 threads were completed with `gpt-5.4-mini`.
 - Run B directory: `outputs/runs/iss20_nudge_100_ui_llm`
 - Run B result: 157 threads, 157 LLM-generated threads, 0 failed threads
 - Run B messages: 389 total, 389 `source=llm`
@@ -124,11 +127,11 @@ KPI comparison:
 - Bridge agent count: A 6 / B 9
 - Isolated agents: A 0 / B 0
 
-LLM/mixed KPI comparison:
+LLM KPI comparison:
 
 - JSON: `outputs/runs/iss20_llm_ab_100step_metrics.json`
 - Data source: `messages.jsonl`
-- Note: Run A contains 23 scripted fallback threads, so this is a mixed LLM/proxy comparison. Run B is fully LLM-generated.
+- Note: A/B are fully LLM-generated. Run A uses two GPT models because the primary model hit its usage limit near the end.
 - Run A total messages: 485
 - Run B total messages: 389
 - Unique interaction pairs: A 54 / B 60
@@ -147,10 +150,10 @@ Passed:
 - LLM-free state and UI export for Run A/B
 - GPT/Codex one-thread probe for Run B
 - GPT/Codex full Run B generation
-- GPT/Codex Run A generation with documented fallback for 23 late-step threads
+- GPT/Codex Run A generation with `gpt-5.3-codex-spark` plus `gpt-5.4-mini` completion for 23 late-step threads
 
 ## Notes
 
 - Current UI `visualization/iss_habitat_demo.html` now includes all 20 agent dots.
-- `scripts/build_pages_site.py` is updated so the Pages build copies the 20x100 LLM/mixed run data first, with scripted data as fallback.
-- The 20x100 output is suitable for local inspection, Pages publication, and data handoff, with the Run A fallback caveat stated above.
+- `scripts/build_pages_site.py` is updated so the Pages build copies the 20x100 LLM run data first, with scripted data as fallback.
+- The 20x100 output is suitable for local inspection, Pages publication, and data handoff, with the Run A mixed-model caveat stated above.
