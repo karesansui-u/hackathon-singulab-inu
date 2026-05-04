@@ -1835,7 +1835,17 @@
       { id: "ISS06", short: "AI", name: "Aisha", age: 33, role: "身体制限×挑戦", color: "#0891b2", base: 4, anchor: "Marcus", privacy: 5 },
       { id: "ISS07", short: "SO", name: "Sofia", age: 27, role: "表現・発信", color: "#ea580c", base: 4, anchor: "Henri", privacy: 3 },
       { id: "ISS08", short: "MA", name: "Marcus", age: 17, role: "葛藤・成長", color: "#be123c", base: 7, anchor: "Aisha", privacy: 5 },
-      { id: "ISS09", short: "HE", name: "Henri", age: 71, role: "統合・哲学", color: "#475569", base: 3, anchor: "Sofia", privacy: 5 }
+      { id: "ISS09", short: "HE", name: "Henri", age: 71, role: "統合・哲学", color: "#475569", base: 3, anchor: "Sofia", privacy: 5 },
+      { id: "ISS10", short: "RA", name: "Ravi", age: 22, role: "橋渡し・技術", color: "#4f46e5", base: 5, anchor: "Priya", privacy: 5 },
+      { id: "ISS11", short: "ME", name: "Mei", age: 45, role: "役割喪失・再生", color: "#9333ea", base: 6, anchor: "Ingrid", privacy: 5 },
+      { id: "ISS12", short: "TR", name: "Tariq", age: 38, role: "土地喪失・適応", color: "#854d0e", base: 5, anchor: "Fatima", privacy: 5 },
+      { id: "ISS13", short: "SI", name: "Siti", age: 29, role: "献身・孤独", color: "#c2410c", base: 7, anchor: "Fatima", privacy: 8 },
+      { id: "ISS14", short: "KW", name: "Kwame", age: 41, role: "コミュニティ形成", color: "#15803d", base: 4, anchor: "Linh", privacy: 3 },
+      { id: "ISS15", short: "AR", name: "Amara", age: 26, role: "積極・発信", color: "#db2777", base: 3, anchor: "Sofia", privacy: 3 },
+      { id: "ISS16", short: "EL", name: "Elena", age: 34, role: "ケア・援助", color: "#0e7490", base: 5, anchor: "Kwame", privacy: 5 },
+      { id: "ISS17", short: "IN", name: "Ingrid", age: 52, role: "知性・分析", color: "#1d4ed8", base: 5, anchor: "Mei", privacy: 5 },
+      { id: "ISS18", short: "DM", name: "Dmitri", age: 48, role: "権威・統制", color: "#334155", base: 4, anchor: "Karim", privacy: 5 },
+      { id: "ISS19", short: "KA", name: "Karim", age: 55, role: "観察・援助", color: "#047857", base: 5, anchor: "Amir", privacy: 5 }
     ];
 
     const nudges = [
@@ -1951,8 +1961,8 @@
       cupola: ["cupola"]
     };
     const generatedRunDirs = {
-      a: ["../data/runs/iss_no_nudge_smoke_ui_llm"],
-      b: ["../data/runs/iss_nudge_smoke_ui_llm"]
+      a: ["../data/runs/iss20_no_nudge_100_ui_llm", "../data/runs/iss20_no_nudge_100_ui", "../data/runs/iss_no_nudge_smoke_ui_llm"],
+      b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm"]
     };
     let currentRun = "b";
     let currentStep = 1;

@@ -17,6 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 
 RUN_DIRS = [
+    "iss20_no_nudge_100_ui_llm",
+    "iss20_nudge_100_ui_llm",
+    "iss20_no_nudge_100_ui",
+    "iss20_nudge_100_ui",
+    "iss20_nudge_100_ui_gpt_probe",
     "iss_no_nudge_smoke_ui_llm",
     "iss_nudge_smoke_ui_llm",
 ]
@@ -45,12 +50,12 @@ def build_public_site() -> None:
     html = source_html.read_text(encoding="utf-8")
     html = html.replace("../outputs/runs/", "../data/runs/")
     html = html.replace(
-        'a: ["../data/runs/iss_no_nudge_smoke_ui_llm", "../data/runs/iss_no_nudge_smoke_ui", "../data/runs/iss_habitat_run_a"],',
-        'a: ["../data/runs/iss_no_nudge_smoke_ui_llm"],',
+        'a: ["../data/runs/iss20_no_nudge_100_ui_llm", "../data/runs/iss20_no_nudge_100_ui", "../data/runs/iss_no_nudge_smoke_ui_llm", "../data/runs/iss_no_nudge_smoke_ui", "../data/runs/iss_habitat_run_a"],',
+        'a: ["../data/runs/iss20_no_nudge_100_ui_llm", "../data/runs/iss20_no_nudge_100_ui", "../data/runs/iss_no_nudge_smoke_ui_llm"],',
     )
     html = html.replace(
-        'b: ["../data/runs/iss_nudge_smoke_ui_llm", "../data/runs/iss_nudge_smoke_ui", "../data/runs/iss_habitat_run_b"]',
-        'b: ["../data/runs/iss_nudge_smoke_ui_llm"]',
+        'b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm", "../data/runs/iss_nudge_smoke_ui", "../data/runs/iss_habitat_run_b"]',
+        'b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm"]',
     )
     write_text(PUBLIC / "visualization" / "iss_habitat_demo.html", html)
 
@@ -60,9 +65,14 @@ def build_public_site() -> None:
             raise SystemExit(f"Missing run output: {source}")
         copytree_clean(source, PUBLIC / "data" / "runs" / run_dir)
 
-    comparison = ROOT / "outputs" / "runs" / "iss_habitat_llm_ab_50step.json"
-    if comparison.exists():
-        shutil.copy2(comparison, PUBLIC / "data" / "runs" / comparison.name)
+    for comparison_name in (
+        "iss20_llm_ab_100step_metrics.json",
+        "iss20_ab_100step_metrics.json",
+        "iss_habitat_llm_ab_50step.json",
+    ):
+        comparison = ROOT / "outputs" / "runs" / comparison_name
+        if comparison.exists():
+            shutil.copy2(comparison, PUBLIC / "data" / "runs" / comparison.name)
 
     write_text(
         PUBLIC / "index.html",
@@ -88,8 +98,10 @@ def build_public_site() -> None:
 GitHub Pages公開用の静的サイトです。
 
 - Main UI: `visualization/iss_habitat_demo.html`
-- Data: `data/runs/iss_no_nudge_smoke_ui_llm`, `data/runs/iss_nudge_smoke_ui_llm`
-- KPI: `data/runs/iss_habitat_llm_ab_50step.json`
+- Data: `data/runs/iss20_no_nudge_100_ui_llm`, `data/runs/iss20_nudge_100_ui_llm`
+- Scripted fallback: `data/runs/iss20_no_nudge_100_ui`, `data/runs/iss20_nudge_100_ui`
+- GPT probe: `data/runs/iss20_nudge_100_ui_gpt_probe`
+- KPI: `data/runs/iss20_llm_ab_100step_metrics.json`
 
 Source files live outside this directory. Rebuild this folder with:
 
@@ -113,4 +125,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

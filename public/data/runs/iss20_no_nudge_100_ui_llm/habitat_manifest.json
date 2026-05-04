@@ -1,0 +1,43 @@
+{
+  "kind": "habitat_ui_export",
+  "pack": "domain_packs/iss_benevolence",
+  "scenario": "run_a_20x100",
+  "run_id": "run_a_20x100",
+  "events_tsv": "/Users/sunagawa/Project/hackathon-singulab-inu/domain_packs/iss_benevolence/data/events_run_a_20x100.tsv",
+  "state_tsv": "outputs/runs/iss20_no_nudge_100_state/societal_state.tsv",
+  "frame_count": 100,
+  "message_count": 485,
+  "conversation_count": 193,
+  "timeline_event_count": 31,
+  "nudge_effect_count": 0,
+  "warnings": [],
+  "outputs": [
+    "habitat_frames.jsonl",
+    "agent_positions.tsv",
+    "module_occupancy.tsv",
+    "sleep_assignments.tsv",
+    "messages.jsonl",
+    "conversation_threads.tsv",
+    "event_timeline.tsv",
+    "nudge_effects.tsv"
+  ],
+  "conversation_generation": {
+    "kind": "llm_history_with_scripted_fallback",
+    "status": "complete_with_fallback",
+    "source_dir": "/Users/sunagawa/Project/hackathon-singulab-inu/outputs/runs/iss20_no_nudge_100_ui",
+    "generated_thread_count": 170,
+    "failed_thread_count": 23,
+    "fallback_thread_count": 23,
+    "message_source_counts": {
+      "llm": 439,
+      "scripted": 46
+    },
+    "start_step": 1,
+    "end_step": 100,
+    "history_size": 12,
+    "llm_config": "examples/spatial_demo/configs/config.iss.codex.fast.20x100.run_a.yaml",
+    "model": "gpt-5.3-codex-spark",
+    "reasoning_effort": "low",
+    "note": "Codex CLI failed repeatedly on late Run A retry; affected threads keep scripted fallback rows."
+  }
+}

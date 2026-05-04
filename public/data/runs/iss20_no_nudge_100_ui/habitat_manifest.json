@@ -1,0 +1,24 @@
+{
+  "kind": "habitat_ui_export",
+  "pack": "domain_packs/iss_benevolence",
+  "scenario": "run_a_20x100",
+  "run_id": "run_a_20x100",
+  "events_tsv": "/Users/sunagawa/Project/hackathon-singulab-inu/domain_packs/iss_benevolence/data/events_run_a_20x100.tsv",
+  "state_tsv": "outputs/runs/iss20_no_nudge_100_state/societal_state.tsv",
+  "frame_count": 100,
+  "message_count": 386,
+  "conversation_count": 193,
+  "timeline_event_count": 31,
+  "nudge_effect_count": 0,
+  "warnings": [],
+  "outputs": [
+    "habitat_frames.jsonl",
+    "agent_positions.tsv",
+    "module_occupancy.tsv",
+    "sleep_assignments.tsv",
+    "messages.jsonl",
+    "conversation_threads.tsv",
+    "event_timeline.tsv",
+    "nudge_effects.tsv"
+  ]
+}

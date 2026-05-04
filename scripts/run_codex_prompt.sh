@@ -23,6 +23,7 @@ cleanup() {
 trap cleanup EXIT
 
 sandbox_mode="${CODEX_SANDBOX:-read-only}"
+ignore_user_config="${CODEX_IGNORE_USER_CONFIG:-0}"
 
 composite_prompt=$(
   cat <<EOF
@@ -35,8 +36,14 @@ EOF
 )
 
 codex_cmd=(codex -a never exec --color never -s "$sandbox_mode")
+if [[ "$ignore_user_config" == "1" || "$ignore_user_config" == "true" ]]; then
+  codex_cmd+=(--ignore-user-config)
+fi
 if [[ -n "${CODEX_MODEL:-}" ]]; then
   codex_cmd+=(--model "$CODEX_MODEL")
+fi
+if [[ -n "${CODEX_REASONING_EFFORT:-}" ]]; then
+  codex_cmd+=(-c "model_reasoning_effort=\"${CODEX_REASONING_EFFORT}\"")
 fi
 codex_cmd+=(-o "$tmp_output" -)
 
