@@ -1,0 +1,6 @@
+channel_id	channel_name	description
+direct	Direct interaction	Face-to-face or immediate interaction
+shared_log	Shared log	Written or recorded shared context
+environment	Environment	Signals from places, objects, or constraints
+private	Private context	Internal memory, rest, or private reflection
+external	External context	Information from outside the local group

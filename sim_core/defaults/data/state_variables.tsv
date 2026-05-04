@@ -1,0 +1,5 @@
+state_id	name	description	min_value	max_value	initial_value	source
+pressure	pressure	Generic pressure level	0	100	50	default
+support	support	Generic support level	0	100	50	default
+trust	trust	Generic trust level	0	100	50	default
+buffer	buffer	Generic buffer or affordance level	0	100	50	default

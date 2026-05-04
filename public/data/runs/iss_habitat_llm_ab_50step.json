@@ -1,0 +1,128 @@
+{
+  "run_a": {
+    "run_dir": "outputs/runs/iss_no_nudge_smoke_ui_llm",
+    "data_source": "messages_jsonl",
+    "proxy_metrics": false,
+    "fallback_used": false,
+    "message_source_counts": {
+      "llm": 249
+    },
+    "llm_message_count": 249,
+    "scripted_message_count": 0,
+    "step_window": {
+      "start_step": 1,
+      "end_step": 50
+    },
+    "total_messages": 249,
+    "unique_interaction_pairs": 36,
+    "help_signal_messages": 0,
+    "reciprocity_rate": 1.0,
+    "repair_after_conflict_rate": 1.0,
+    "conflict_events": 48,
+    "bridge_agent_count": 7,
+    "bridge_agents": [
+      "ISS00",
+      "ISS01",
+      "ISS02",
+      "ISS03",
+      "ISS04",
+      "ISS08",
+      "ISS09"
+    ],
+    "load_fairness": 0.8229,
+    "active_agents": 10,
+    "isolated_agents": [],
+    "sent_by_agent": {
+      "ISS00": 37,
+      "ISS01": 33,
+      "ISS02": 27,
+      "ISS03": 15,
+      "ISS04": 24,
+      "ISS05": 15,
+      "ISS06": 19,
+      "ISS07": 17,
+      "ISS08": 34,
+      "ISS09": 28
+    },
+    "received_by_agent": {
+      "ISS00": 20,
+      "ISS01": 24,
+      "ISS02": 21,
+      "ISS03": 15,
+      "ISS04": 39,
+      "ISS05": 21,
+      "ISS06": 14,
+      "ISS07": 13,
+      "ISS08": 38,
+      "ISS09": 44
+    },
+    "reasoning_entries_by_agent": {}
+  },
+  "run_b": {
+    "run_dir": "outputs/runs/iss_nudge_smoke_ui_llm",
+    "data_source": "messages_jsonl",
+    "proxy_metrics": false,
+    "fallback_used": false,
+    "message_source_counts": {
+      "llm": 210
+    },
+    "llm_message_count": 210,
+    "scripted_message_count": 0,
+    "step_window": {
+      "start_step": 1,
+      "end_step": 50
+    },
+    "total_messages": 210,
+    "unique_interaction_pairs": 34,
+    "help_signal_messages": 0,
+    "reciprocity_rate": 1.0,
+    "repair_after_conflict_rate": 1.0,
+    "conflict_events": 21,
+    "bridge_agent_count": 5,
+    "bridge_agents": [
+      "ISS00",
+      "ISS04",
+      "ISS05",
+      "ISS08",
+      "ISS09"
+    ],
+    "load_fairness": 0.799,
+    "active_agents": 10,
+    "isolated_agents": [],
+    "sent_by_agent": {
+      "ISS00": 34,
+      "ISS01": 30,
+      "ISS02": 13,
+      "ISS03": 11,
+      "ISS04": 24,
+      "ISS05": 14,
+      "ISS06": 17,
+      "ISS07": 17,
+      "ISS08": 28,
+      "ISS09": 22
+    },
+    "received_by_agent": {
+      "ISS00": 20,
+      "ISS01": 18,
+      "ISS02": 11,
+      "ISS03": 10,
+      "ISS04": 39,
+      "ISS05": 16,
+      "ISS06": 13,
+      "ISS07": 13,
+      "ISS08": 29,
+      "ISS09": 41
+    },
+    "reasoning_entries_by_agent": {}
+  },
+  "delta": {
+    "messages_diff_b_minus_a": -39,
+    "pairs_diff_b_minus_a": -2,
+    "help_signals_diff_b_minus_a": 0,
+    "reciprocity_rate_diff_b_minus_a": 0.0,
+    "repair_after_conflict_rate_diff_b_minus_a": 0.0,
+    "bridge_agent_count_diff_b_minus_a": -2,
+    "load_fairness_diff_b_minus_a": -0.0239,
+    "isolates_diff_b_minus_a": 0
+  }
+}

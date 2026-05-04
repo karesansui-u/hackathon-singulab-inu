@@ -1,0 +1,9 @@
+evaluation	emotion	description	default_polarity
+positive	calm	The agent feels stable and safe	positive
+positive	hope	The agent sees a workable path	positive
+positive	connection	The agent feels supported by others	positive
+neutral	steady	The agent is neither strongly positive nor negative	neutral
+caution	anxiety	The agent senses uncertainty or risk	caution
+caution	frustration	The agent senses unfairness or friction	caution
+risk	loss	The agent feels something important is missing	risk
+risk	shutdown	The agent has low energy to act or connect	high_risk

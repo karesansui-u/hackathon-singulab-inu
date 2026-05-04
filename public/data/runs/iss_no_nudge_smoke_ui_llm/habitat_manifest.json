@@ -1,0 +1,35 @@
+{
+  "kind": "habitat_ui_export",
+  "pack": "domain_packs/iss_benevolence",
+  "scenario": "run_a",
+  "run_id": "run_a_smoke",
+  "events_tsv": "/Users/sunagawa/Project/hackathon-singulab-inu/domain_packs/iss_benevolence/data/events_run_a.tsv",
+  "state_tsv": "outputs/runs/iss_no_nudge_smoke_state/societal_state.tsv",
+  "frame_count": 50,
+  "message_count": 249,
+  "conversation_count": 83,
+  "timeline_event_count": 17,
+  "nudge_effect_count": 0,
+  "warnings": [],
+  "outputs": [
+    "habitat_frames.jsonl",
+    "agent_positions.tsv",
+    "module_occupancy.tsv",
+    "sleep_assignments.tsv",
+    "messages.jsonl",
+    "conversation_threads.tsv",
+    "event_timeline.tsv",
+    "nudge_effects.tsv"
+  ],
+  "conversation_generation": {
+    "kind": "llm_history",
+    "status": "complete",
+    "source_dir": "/Users/sunagawa/Project/hackathon-singulab-inu/outputs/runs/iss_no_nudge_smoke_ui",
+    "generated_thread_count": 83,
+    "failed_thread_count": 0,
+    "start_step": 1,
+    "end_step": 50,
+    "history_size": 12,
+    "llm_config": "examples/spatial_demo/configs/config.iss.claude.smoke.run_a.yaml"
+  }
+}

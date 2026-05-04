@@ -1,0 +1,5 @@
+feedback_id	source_action_category	source_emotion	target_state_id	direction	coefficient	delay_steps	cap	rationale	evidence_level
+F001	withdraw		pressure	increase	0.04	1	12	Withdrawal can increase shared pressure	D
+F002	help	connection	support	increase	0.05	1	15	Helping behavior can increase shared support	D
+F003	ask	anxiety	trust	increase	0.03	1	10	Asking can clarify uncertainty and improve trust	D
+F004	adjust		buffer	increase	0.04	1	12	Adjusting rules can improve buffer capacity	D

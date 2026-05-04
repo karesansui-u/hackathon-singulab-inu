@@ -1,0 +1,6 @@
+metric_id	metric_name	description	direction
+total_turns	Total turns	Number of generated agent turns	higher_is_contextual
+interaction_pairs	Interaction pairs	Number of unique interaction pairs	higher_is_better
+help_signals	Help signals	Messages or actions indicating help or support	higher_is_better
+isolated_agents	Isolated agents	Agents with low interaction or low output	lower_is_better
+feedback_pressure	Feedback pressure	Aggregated pressure from agent reactions	context_dependent

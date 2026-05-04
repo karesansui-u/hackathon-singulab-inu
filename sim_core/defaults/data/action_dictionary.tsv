@@ -1,0 +1,9 @@
+action_category	description
+observe	Observe without major action
+ask	Ask for help, clarification, or advice
+share	Share information, feeling, or context
+help	Help another agent or the shared task
+pause	Take distance, rest, or delay action
+adjust	Adjust a rule, plan, allocation, or routine
+mediate	Reduce misunderstanding between agents
+withdraw	Withdraw from interaction or action

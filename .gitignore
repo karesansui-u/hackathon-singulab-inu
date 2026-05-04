@@ -1,0 +1,14 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+
+venv/
+
+outputs/
+logs/
+output/
+output_*/
+
+*.log
+
+data/cache/

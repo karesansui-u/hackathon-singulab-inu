@@ -1,0 +1,10 @@
+viewer_id: domain_viewer
+title: "Domain Simulation"
+layout:
+  map_type: domain
+  sidebar: selected_agent
+data_bindings:
+  agent_turns: agent_turns.tsv
+  messages: messages.jsonl
+hooks:
+  export_viewer: []
