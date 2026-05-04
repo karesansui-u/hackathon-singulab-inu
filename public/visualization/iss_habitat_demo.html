@@ -1671,7 +1671,8 @@
     <section class="toolbar" aria-label="シミュレーション操作">
       <div class="segmented" aria-label="実行条件">
         <button type="button" data-run="a" aria-pressed="false">A：ナッジなし</button>
-        <button type="button" data-run="b" aria-pressed="true">B：ナッジあり</button>
+        <button type="button" data-run="b" aria-pressed="false">B：ナッジあり</button>
+        <button type="button" data-run="c" aria-pressed="true">C：撤去後</button>
       </div>
       <div class="timeline">
         <button type="button" class="icon-button" id="prevButton" aria-label="前のステップ">‹</button>
@@ -1962,9 +1963,10 @@
     };
     const generatedRunDirs = {
       a: ["../data/runs/iss20_no_nudge_100_ui_llm", "../data/runs/iss20_no_nudge_100_ui", "../data/runs/iss_no_nudge_smoke_ui_llm"],
-      b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm"]
+      b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm"],
+      c: ["../data/runs/iss10_nudge_removed_100_ui_claude_sonnet46"]
     };
-    let currentRun = "b";
+    let currentRun = "c";
     let currentStep = 1;
     let selectedAgentId = "ISS03";
     let playing = false;
@@ -1972,7 +1974,7 @@
     let showNudges = true;
     let quietMode = false;
     let conversationMode = "important";
-    let generatedRuns = { a: null, b: null };
+    let generatedRuns = { a: null, b: null, c: null };
 
     const moduleLayer = document.getElementById("moduleLayer");
     const nudgeLayer = document.getElementById("nudgeLayer");
@@ -2006,6 +2008,13 @@
 
     function generatedRunData() {
       return generatedRuns[currentRun];
+    }
+
+    function runLabel(runKey = currentRun) {
+      if (runKey === "a") return "A：ナッジなし";
+      if (runKey === "b") return "B：ナッジあり";
+      if (runKey === "c") return "C：撤去後";
+      return runKey;
     }
 
     function maxStep() {
@@ -3052,7 +3061,7 @@
 
     function renderNudges() {
       nudgeLayer.innerHTML = "";
-      const frameObjects = currentRun === "b" ? (generatedFrame(currentStep)?.active_objects || []) : [];
+      const frameObjects = generatedFrame(currentStep)?.active_objects || [];
       const visibleNudges = frameObjects.length
         ? frameObjects.map((object, index) => {
             const staticNudge = nudges.find((nudge) => nudge.id === object.object_id);
@@ -3232,7 +3241,7 @@
       const frictionText = activeIncidents(currentStep)
         .map((incident) => `${incident.stateLabel}:${incident.agents.map(agentName).join("・")}`)
         .join(" / ") || "なし";
-      const runText = `${currentRun === "b" ? "B：ナッジあり" : "A：ナッジなし"} / ${generatedRunData() ? "生成データ" : "デモ"}`;
+      const runText = `${runLabel()} / ${generatedRunData() ? "生成データ" : "デモ"}`;
       statusStrip.innerHTML = [
         ["実行条件", runText],
         ["混雑", `${crowded.module.name} ${crowded.count}/${crowded.module.cap}`],
@@ -3520,7 +3529,7 @@
         button.setAttribute("aria-pressed", button.dataset.conversationTab === conversationMode ? "true" : "false");
       });
       const sourceLabel = generatedRunData() ? "生成データ" : "デモ";
-      selectedRunLabel.textContent = `${currentRun === "b" ? "B：ナッジあり" : "A：ナッジなし"} / ${sourceLabel}`;
+      selectedRunLabel.textContent = `${runLabel()} / ${sourceLabel}`;
     }
 
     function renderBrandSubtitle() {

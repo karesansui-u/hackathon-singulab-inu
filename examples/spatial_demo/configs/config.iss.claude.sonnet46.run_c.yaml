@@ -14,7 +14,7 @@ llm:
     - "json"
     - "--tools"
     - ""
-    - "{prompt}"
+  prompt_mode: "stdin"
   response_format: "json"
   response_json_field: "result"
   timeout_seconds: 300

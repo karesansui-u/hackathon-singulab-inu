@@ -155,6 +155,7 @@ def write_generation_outputs(
     threads: list[dict[str, Any]],
     manifest_base: dict[str, Any],
     args: argparse.Namespace,
+    llm_config: dict[str, Any],
     generated: int,
     failed: int,
     status: str,
@@ -173,6 +174,9 @@ def write_generation_outputs(
             "end_step": args.end_step,
             "history_size": args.history_size,
             "llm_config": str(args.llm_config or ""),
+            "model": llm_config.get("model", ""),
+            "provider": llm_config.get("provider", ""),
+            "prompt_mode": llm_config.get("prompt_mode", ""),
         },
         "message_count": len(messages),
         "conversation_count": len(threads),
@@ -554,6 +558,7 @@ def main() -> None:
     copy_static_files(input_dir, output_dir)
 
     client = None
+    llm_config: dict[str, Any] = {}
     if not args.mock:
         llm_config = load_llm_config(args.llm_config)
         if not llm_config:
@@ -582,6 +587,7 @@ def main() -> None:
             checkpoint_threads,
             manifest_base,
             args,
+            llm_config,
             generated,
             failed,
             status,
@@ -640,6 +646,7 @@ def main() -> None:
         new_threads,
         manifest_base,
         args,
+        llm_config,
         generated,
         failed,
         "complete",

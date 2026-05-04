@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC = ROOT / "public"
 
 RUN_DIRS = [
+    "iss10_nudge_removed_100_ui_claude_sonnet46",
     "iss20_no_nudge_100_ui_llm",
     "iss20_nudge_100_ui_llm",
     "iss20_no_nudge_100_ui",
@@ -109,6 +110,7 @@ GitHub Pages公開用の静的サイトです。
 
 - Main UI: `visualization/iss_habitat_demo.html`
 - Data: `data/runs/iss20_no_nudge_100_ui_llm`, `data/runs/iss20_nudge_100_ui_llm`
+- Run C: `data/runs/iss10_nudge_removed_100_ui_claude_sonnet46`
 - Scripted fallback: `data/runs/iss20_no_nudge_100_ui`, `data/runs/iss20_nudge_100_ui`
 - GPT probe: `data/runs/iss20_nudge_100_ui_gpt_probe`
 - KPI: `data/runs/iss20_llm_ab_100step_metrics.json`
