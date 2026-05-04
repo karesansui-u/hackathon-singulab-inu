@@ -25,6 +25,7 @@ ISS実験の実行設定は `domain_packs/iss_benevolence/domain.yaml` と `doma
 | `config.iss.claude.smoke.run_b.yaml` | ISS 10人版の介入群（Claude / smoke） |
 | `config.iss.claude.run_a.yaml` | ISS 10人版の対照群（Claude / 50step） |
 | `config.iss.claude.run_b.yaml` | ISS 10人版の介入群（Claude / 50step） |
+| `config.iss.claude.sonnet46.run_c.yaml` | ISS 10人100step版のナッジ撤去後観察（Claude Sonnet 4.6） |
 | `config.iss.codex.smoke.run_a.yaml` | ISS 10人版の対照群（Codex / smoke） |
 | `config.iss.codex.smoke.run_b.yaml` | ISS 10人版の介入群（Codex / smoke） |
 | `config.iss.codex.run_a.yaml` | ISS 10人版の対照群（Codex / 50step） |

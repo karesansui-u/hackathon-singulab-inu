@@ -1,0 +1,22 @@
+# ISS 10-agent / 100-step Run C conversation generation with Claude Sonnet 4.6.
+# Run C: steps 1-50 reuse Run B-style active nudges, then steps 51-100 remove
+# the physical nudge objects and test whether learned practices persist.
+
+llm:
+  provider: "command"
+  model: "claude-sonnet-4-6"
+  command:
+    - "claude"
+    - "-p"
+    - "--model"
+    - "claude-sonnet-4-6"
+    - "--output-format"
+    - "json"
+    - "--tools"
+    - ""
+    - "{prompt}"
+  response_format: "json"
+  response_json_field: "result"
+  timeout_seconds: 300
+  max_retries: 1
+  retry_backoff_seconds: 2

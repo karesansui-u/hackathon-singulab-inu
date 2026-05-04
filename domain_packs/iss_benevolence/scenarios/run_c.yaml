@@ -1,0 +1,12 @@
+runtime:
+  default_profile: "claude_sonnet46_run_c"
+scenario_label: "run_c_10agents_100steps_nudge_removed_after_50"
+time:
+  steps: 100
+data:
+  agents: "${pack}/data/agents.tsv"
+  personas_10: "${pack}/data/personas_10.tsv"
+  places: "${pack}/data/places_iss_10.tsv"
+  time_schedule: "${pack}/data/time_schedule_100.tsv"
+  relationship_seed: "${pack}/data/relationship_seed.tsv"
+  events: "${pack}/data/events_run_c.tsv"
