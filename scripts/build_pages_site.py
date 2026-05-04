@@ -26,11 +26,21 @@ RUN_DIRS = [
     "iss_nudge_smoke_ui_llm",
 ]
 
+TEXT_SUFFIXES = {".html", ".json", ".jsonl", ".md", ".tsv", ".txt", ".yaml", ".yml"}
+
 
 def copytree_clean(source: Path, target: Path) -> None:
     if target.exists():
         shutil.rmtree(target)
     shutil.copytree(source, target)
+    normalize_text_files(target)
+
+
+def normalize_text_files(root: Path) -> None:
+    for path in root.rglob("*"):
+        if path.is_file() and path.suffix in TEXT_SUFFIXES:
+            text = path.read_text(encoding="utf-8")
+            path.write_text(text.replace("\r\n", "\n"), encoding="utf-8")
 
 
 def write_text(path: Path, text: str) -> None:

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ISS 10人滞在デモ</title>
+  <title>ISS滞在シミュレーション</title>
   <style>
     :root {
       color-scheme: light;
@@ -1662,8 +1662,8 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
-        <h1 class="brand-title">ISS 10人滞在デモ</h1>
-        <p class="brand-subtitle">画像なしの状態フレーム / 常設寝床7・仮寝床3 / 50ステップ</p>
+        <h1 class="brand-title">ISS滞在シミュレーション</h1>
+        <p class="brand-subtitle" id="brandSubtitle">データ読み込み中</p>
       </div>
       <div class="metrics" id="metrics"></div>
     </header>
@@ -1986,6 +1986,7 @@
     const playButton = document.getElementById("playButton");
     const detailPanel = document.getElementById("detailPanel");
     const moduleList = document.getElementById("moduleList");
+    const brandSubtitle = document.getElementById("brandSubtitle");
     const sleepGrid = document.getElementById("sleepGrid");
     const conversationList = document.getElementById("conversationList");
     const conversationLead = document.getElementById("conversationLead");
@@ -2108,6 +2109,21 @@
       return generatedRunData()?.framesByStep.get(Number(day));
     }
 
+    function loadedRunLabel(dir) {
+      return String(dir || "")
+        .split("/")
+        .filter(Boolean)
+        .slice(-1)[0] || "未指定";
+    }
+
+    function generationModelLabel(manifest) {
+      const generation = manifest?.conversation_generation || {};
+      if (generation.primary_model && generation.fallback_model) {
+        return `${generation.primary_model}+${generation.fallback_model}`;
+      }
+      return generation.model || generation.primary_model || "";
+    }
+
     function uiStress(value) {
       const numeric = Number(value);
       if (!Number.isFinite(numeric)) return 5;
@@ -2129,27 +2145,34 @@
     }
 
     async function loadGeneratedRunFromDir(runKey, dir) {
-      const [framesText, messagesText, threadsText, timelineText, effectsText] = await Promise.all([
+      const [framesText, messagesText, threadsText, timelineText, effectsText, manifestText] = await Promise.all([
         fetchText(`${dir}/habitat_frames.jsonl`),
         fetchText(`${dir}/messages.jsonl`),
         fetchText(`${dir}/conversation_threads.tsv`),
         fetchOptionalText(`${dir}/event_timeline.tsv`),
-        fetchOptionalText(`${dir}/nudge_effects.tsv`)
+        fetchOptionalText(`${dir}/nudge_effects.tsv`),
+        fetchOptionalText(`${dir}/habitat_manifest.json`)
       ]);
       const frames = parseJsonl(framesText);
       const messages = parseJsonl(messagesText);
       const threads = parseTsv(threadsText);
       const eventTimeline = timelineText ? parseTsv(timelineText) : [];
       const nudgeEffects = effectsText ? parseTsv(effectsText) : [];
+      const manifest = manifestText ? JSON.parse(manifestText) : {};
+      const agentCount = Math.max(0, ...frames.map((frame) => (frame.agent_states || []).length));
       return {
         runKey,
         sourceDir: dir,
+        manifest,
         frames,
         eventTimeline,
         nudgeEffects,
         framesByStep: new Map(frames.map((frame) => [Number(frame.step), frame])),
         messagesByConversation: groupBy(messages, (message) => message.conversation_id),
         threadsByStep: groupBy(threads, (thread) => Number(thread.step)),
+        messageCount: messages.length,
+        threadCount: threads.length,
+        agentCount,
         maxStep: Math.max(1, ...frames.map((frame) => Number(frame.step) || 0))
       };
     }
@@ -3500,12 +3523,33 @@
       selectedRunLabel.textContent = `${currentRun === "b" ? "B：ナッジあり" : "A：ナッジなし"} / ${sourceLabel}`;
     }
 
+    function renderBrandSubtitle() {
+      const data = generatedRunData();
+      if (!data) {
+        brandSubtitle.textContent = "読み込みデータなし";
+        return;
+      }
+      const runId = data.manifest?.run_id || data.manifest?.scenario || "";
+      const conversationCount = Number(data.manifest?.conversation_count) || data.threadCount;
+      const parts = [
+        `読み込み: ${loadedRunLabel(data.sourceDir)}`,
+        runId,
+        `${data.maxStep}ステップ`,
+        `${data.agentCount || agents.length}人`,
+        `${conversationCount}会話・${data.messageCount}発話`
+      ];
+      const model = generationModelLabel(data.manifest);
+      if (model) parts.push(model);
+      brandSubtitle.textContent = parts.filter(Boolean).join(" / ");
+    }
+
     function render() {
       const data = snapshot(currentStep);
       stepSlider.max = String(maxStep());
       stepSlider.value = String(currentStep);
       stepChip.textContent = `ステップ ${currentStep}`;
       phaseLabel.textContent = data.frame?.phase || phaseFor(currentStep).name;
+      renderBrandSubtitle();
       renderRunButtons();
       updateMap(data);
       renderNudges();
