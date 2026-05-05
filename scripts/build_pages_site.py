@@ -117,6 +117,7 @@ GitHub Pages公開用の静的サイトです。
 
 - Main UI: `visualization/iss_habitat_demo.html`
 - Demo URL: `https://karesansui-u.github.io/hackathon-singulab-inu/visualization/iss_habitat_demo.html`
+- README preview GIF: `assets/iss20_100_demo.gif`
 - 20x100 demo video: `assets/iss20_100_demo.mp4`
 - 20x100: `data/runs/iss20_no_nudge_100_ui_llm`, `data/runs/iss20_nudge_100_ui_llm`
 - 10x50: `data/runs/iss_no_nudge_smoke_ui_llm`, `data/runs/iss_nudge_smoke_ui_llm`

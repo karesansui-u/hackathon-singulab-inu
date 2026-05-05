@@ -14,9 +14,9 @@ https://karesansui-u.github.io/hackathon-singulab-inu/visualization/iss_habitat_
 
 UI上部のセレクトボックスから、20人/100ステップ、10人/50ステップ、ナッジ撤去後Run Cを切り替えられます。
 
-<video src="assets/iss20_100_demo.mp4" controls width="100%"></video>
+![ISS閉鎖環境シミュレーションのデモプレビュー](assets/iss20_100_demo.gif)
 
-動画が表示されない場合は [20人100ステップのデモ動画](assets/iss20_100_demo.mp4) を開いてください。
+高解像度版は [MP4動画](assets/iss20_100_demo.mp4) を開いてください。
 
 ## コンセプト
 
