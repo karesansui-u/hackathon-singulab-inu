@@ -1,5 +1,7 @@
 # ISS Closed Habitat Stress Simulator
 
+**Demo:** [GitHub Pagesで開く](https://karesansui-u.github.io/hackathon-singulab-inu/visualization/iss_habitat_demo.html)
+
 ISSのような閉鎖空間で、LLMエージェントがどのようにストレスを受け、会話し、協力し、衝突し、修復するかを観測するシミュレーションデモです。
 
 もともとのテーマは「善性を育む環境設計」ですが、このデモはより広く、**高ストレス環境を強制構築して、心理と関係の崩壊を環境設計でどう防げるかを試すプロダクト**として設計しています。
