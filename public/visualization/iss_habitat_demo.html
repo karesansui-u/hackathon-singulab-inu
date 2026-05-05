@@ -157,6 +157,19 @@
       font-weight: 800;
     }
 
+    .run-select {
+      flex: none;
+      min-height: 38px;
+      max-width: min(360px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 0 36px 0 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
     .timeline {
       min-width: 220px;
       flex: 1;
@@ -1669,11 +1682,11 @@
     </header>
 
     <section class="toolbar" aria-label="シミュレーション操作">
-      <div class="segmented" aria-label="実行条件">
-        <button type="button" data-run="a" aria-pressed="false">A：ナッジなし</button>
-        <button type="button" data-run="b" aria-pressed="false">B：ナッジあり</button>
-        <button type="button" data-run="c" aria-pressed="true">C：撤去後</button>
-      </div>
+      <select class="run-select" id="runSelect" aria-label="実験データセット">
+        <option value="b">20人100step / B：ナッジあり</option>
+        <option value="a">20人100step / A：ナッジなし</option>
+        <option value="c">10人100step / C：ナッジ撤去後</option>
+      </select>
       <div class="timeline">
         <button type="button" class="icon-button" id="prevButton" aria-label="前のステップ">‹</button>
         <button type="button" class="icon-button" id="playButton" aria-label="再生">▶</button>
@@ -1966,7 +1979,7 @@
       b: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe", "../data/runs/iss_nudge_smoke_ui_llm"],
       c: ["../data/runs/iss10_nudge_removed_100_ui_claude_sonnet46"]
     };
-    let currentRun = "c";
+    let currentRun = "b";
     let currentStep = 1;
     let selectedAgentId = "ISS03";
     let playing = false;
@@ -1986,6 +1999,7 @@
     const stepSlider = document.getElementById("stepSlider");
     const stepChip = document.getElementById("stepChip");
     const playButton = document.getElementById("playButton");
+    const runSelect = document.getElementById("runSelect");
     const detailPanel = document.getElementById("detailPanel");
     const moduleList = document.getElementById("moduleList");
     const brandSubtitle = document.getElementById("brandSubtitle");
@@ -3525,6 +3539,9 @@
       document.querySelectorAll("[data-run]").forEach((button) => {
         button.setAttribute("aria-pressed", button.dataset.run === currentRun ? "true" : "false");
       });
+      if (runSelect) {
+        runSelect.value = currentRun;
+      }
       document.querySelectorAll("[data-conversation-tab]").forEach((button) => {
         button.setAttribute("aria-pressed", button.dataset.conversationTab === conversationMode ? "true" : "false");
       });
@@ -3598,6 +3615,14 @@
         render();
       });
     });
+
+    if (runSelect) {
+      runSelect.addEventListener("change", (event) => {
+        currentRun = event.target.value;
+        currentStep = clamp(currentStep, 1, maxStep());
+        render();
+      });
+    }
 
     document.querySelectorAll("[data-conversation-tab]").forEach((button) => {
       button.addEventListener("click", () => {
