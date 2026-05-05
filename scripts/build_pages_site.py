@@ -53,6 +53,7 @@ def build_public_site() -> None:
     PUBLIC.mkdir(parents=True, exist_ok=True)
     (PUBLIC / "visualization").mkdir(parents=True, exist_ok=True)
     (PUBLIC / "data" / "runs").mkdir(parents=True, exist_ok=True)
+    (PUBLIC / "assets").mkdir(parents=True, exist_ok=True)
 
     source_html = ROOT / "visualization" / "iss_habitat_demo.html"
     if not source_html.exists():
@@ -85,6 +86,12 @@ def build_public_site() -> None:
         if comparison.exists():
             shutil.copy2(comparison, PUBLIC / "data" / "runs" / comparison.name)
 
+    assets_dir = ROOT / "assets"
+    if assets_dir.exists():
+        for asset in assets_dir.iterdir():
+            if asset.is_file():
+                shutil.copy2(asset, PUBLIC / "assets" / asset.name)
+
     write_text(
         PUBLIC / "index.html",
         """<!doctype html>
@@ -109,6 +116,8 @@ def build_public_site() -> None:
 GitHub Pages公開用の静的サイトです。
 
 - Main UI: `visualization/iss_habitat_demo.html`
+- Demo URL: `https://karesansui-u.github.io/hackathon-singulab-inu/visualization/iss_habitat_demo.html`
+- 20x100 demo video: `assets/iss20_100_demo.mp4`
 - 20x100: `data/runs/iss20_no_nudge_100_ui_llm`, `data/runs/iss20_nudge_100_ui_llm`
 - 10x50: `data/runs/iss_no_nudge_smoke_ui_llm`, `data/runs/iss_nudge_smoke_ui_llm`
 - 10x100 Run C: `data/runs/iss10_nudge_removed_100_ui_claude_sonnet46`
