@@ -2206,6 +2206,12 @@
       return numeric > 10 ? clamp(Math.round(numeric / 10), 2, 10) : clamp(Math.round(numeric), 2, 10);
     }
 
+    function uiStressMetric(value) {
+      const numeric = Number(value);
+      if (!Number.isFinite(numeric)) return 5;
+      return numeric > 10 ? clamp(numeric / 10, 2, 10) : clamp(numeric, 2, 10);
+    }
+
     async function fetchText(path) {
       const response = await fetch(path, { cache: "no-store" });
       if (!response.ok) throw new Error(`${response.status} ${path}`);
@@ -3272,7 +3278,7 @@
       const frame = generatedFrame(currentStep);
       if (frame?.metrics) {
         const values = [
-          ["現在平均ストレス", uiStress(frame.metrics.average_stress).toFixed(1)],
+          ["現在平均ストレス", uiStressMetric(frame.metrics.average_stress).toFixed(1)],
           ["摩擦中", frame.metrics.conflict_count ?? 0],
           ["孤立気味", frame.metrics.isolated_agents ?? 0],
           ["修復中", frame.metrics.repair_count ?? 0],
