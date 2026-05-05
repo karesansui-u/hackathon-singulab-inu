@@ -1683,8 +1683,10 @@
 
     <section class="toolbar" aria-label="シミュレーション操作">
       <select class="run-select" id="runSelect" aria-label="実験データセット">
-        <option value="b">20人100step / B：ナッジあり</option>
-        <option value="a">20人100step / A：ナッジなし</option>
+        <option value="b20">20人100step / B：ナッジあり</option>
+        <option value="a20">20人100step / A：ナッジなし</option>
+        <option value="b10">10人50step / B：ナッジあり</option>
+        <option value="a10">10人50step / A：ナッジなし</option>
         <option value="c">10人100step / C：ナッジ撤去後</option>
       </select>
       <div class="timeline">
@@ -1975,11 +1977,20 @@
       cupola: ["cupola"]
     };
     const generatedRunDirs = {
-      a: ["../outputs/runs/iss20_no_nudge_100_ui_llm", "../outputs/runs/iss20_no_nudge_100_ui", "../outputs/runs/iss_no_nudge_smoke_ui_llm", "../outputs/runs/iss_no_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_a"],
-      b: ["../outputs/runs/iss20_nudge_100_ui_llm", "../outputs/runs/iss20_nudge_100_ui", "../outputs/runs/iss20_nudge_100_ui_gpt_probe", "../outputs/runs/iss_nudge_smoke_ui_llm", "../outputs/runs/iss_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_b"],
+      a20: ["../outputs/runs/iss20_no_nudge_100_ui_llm", "../outputs/runs/iss20_no_nudge_100_ui"],
+      b20: ["../outputs/runs/iss20_nudge_100_ui_llm", "../outputs/runs/iss20_nudge_100_ui", "../outputs/runs/iss20_nudge_100_ui_gpt_probe"],
+      a10: ["../outputs/runs/iss_no_nudge_smoke_ui_llm", "../outputs/runs/iss_no_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_a"],
+      b10: ["../outputs/runs/iss_nudge_smoke_ui_llm", "../outputs/runs/iss_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_b"],
       c: ["../outputs/runs/iss10_nudge_removed_100_ui_claude_sonnet46"]
     };
-    let currentRun = "b";
+    const runFamilies = {
+      a20: "a",
+      a10: "a",
+      b20: "b",
+      b10: "b",
+      c: "c"
+    };
+    let currentRun = "b20";
     let currentStep = 1;
     let selectedAgentId = "ISS03";
     let playing = false;
@@ -1987,7 +1998,7 @@
     let showNudges = true;
     let quietMode = false;
     let conversationMode = "important";
-    let generatedRuns = { a: null, b: null, c: null };
+    let generatedRuns = { a20: null, b20: null, a10: null, b10: null, c: null };
 
     const moduleLayer = document.getElementById("moduleLayer");
     const nudgeLayer = document.getElementById("nudgeLayer");
@@ -2012,6 +2023,7 @@
     const nudgeEffectList = document.getElementById("nudgeEffectList");
     const statusStrip = document.getElementById("statusStrip");
     const selectedRunLabel = document.getElementById("selectedRunLabel");
+    const activeCrewLabel = document.getElementById("activeCrewLabel");
     const phaseLabel = document.getElementById("phaseLabel");
     const nudgeToggle = document.getElementById("nudgeToggle");
     const calmToggle = document.getElementById("calmToggle");
@@ -2025,10 +2037,28 @@
     }
 
     function runLabel(runKey = currentRun) {
-      if (runKey === "a") return "A：ナッジなし";
-      if (runKey === "b") return "B：ナッジあり";
+      if (runKey === "a20") return "20人100step / A：ナッジなし";
+      if (runKey === "b20") return "20人100step / B：ナッジあり";
+      if (runKey === "a10") return "10人50step / A：ナッジなし";
+      if (runKey === "b10") return "10人50step / B：ナッジあり";
       if (runKey === "c") return "C：撤去後";
       return runKey;
+    }
+
+    function runFamily(runKey = currentRun) {
+      return runFamilies[runKey] || runKey;
+    }
+
+    function isNudgeRun(runKey = currentRun) {
+      return runFamily(runKey) === "b";
+    }
+
+    function isNoNudgeRun(runKey = currentRun) {
+      return runFamily(runKey) === "a";
+    }
+
+    function expectedAgentCount(runKey = currentRun) {
+      return ["a10", "b10", "c"].includes(runKey) ? 10 : 20;
     }
 
     function maxStep() {
@@ -2243,7 +2273,7 @@
     }
 
     function runBoost(day) {
-      if (currentRun === "a") return 0;
+      if (isNoNudgeRun()) return 0;
       let boost = 0;
       if (day >= 6) boost += 0.8;
       if (day >= 11) boost += 0.6;
@@ -2254,7 +2284,7 @@
     }
 
     function incidentWindow(plan) {
-      if (currentRun === "b") {
+      if (isNudgeRun()) {
         return {
           start: plan.start,
           end: plan.runBEnd,
@@ -2290,9 +2320,9 @@
     function incidentStressFor(agentId, day) {
       return incidentsForDay(day).reduce((sum, incident) => {
         if (!incident.agents.includes(agentId)) return sum;
-        if (incident.status === "repair") return sum + (currentRun === "b" ? 0.15 : 0.55);
+        if (incident.status === "repair") return sum + (isNudgeRun() ? 0.15 : 0.55);
         const danger = incident.severity === "danger" ? 1.45 : 0.9;
-        return sum + (currentRun === "b" ? danger * 0.82 : danger);
+        return sum + (isNudgeRun() ? danger * 0.82 : danger);
       }, 0);
     }
 
@@ -2302,14 +2332,14 @@
       const tail = day >= 45 ? (day - 44) * 0.36 : 0;
       const noise = (deterministic(index, day, 3) - 0.5) * 1.2;
       const relief = runBoost(day) * (agent.privacy >= 8 ? 0.72 : 1);
-      const connectorRelief = currentRun === "b" && ["ISS04", "ISS06", "ISS09"].includes(agent.id) ? 0.45 : 0;
+      const connectorRelief = isNudgeRun() && ["ISS04", "ISS06", "ISS09"].includes(agent.id) ? 0.45 : 0;
       const raw = agent.base + chronic + tail + noise + incidentStressFor(agent.id, day) - relief - connectorRelief;
       return clamp(Math.round(raw), 2, 10);
     }
 
     function placeFor(agent, index, day) {
       const stress = stressFor(agent, index, day);
-      const r = deterministic(index, day, currentRun === "a" ? 7 : 11);
+      const r = deterministic(index, day, isNoNudgeRun() ? 7 : 11);
       const incident = incidentForAgent(agent.id, day);
 
       if (incident && incident.status === "active" && r < 0.86) return incident.module;
@@ -2317,16 +2347,16 @@
       if (day <= 3) {
         return index % 3 === 0 ? "harmony" : index % 3 === 1 ? "crew" : "destiny";
       }
-      if (agent.id === "ISS03" && stress >= 8 && r < (currentRun === "b" && day >= 11 ? 0.38 : 0.66)) return "crew";
-      if (agent.id === "ISS02" && stress >= 8 && r < (currentRun === "b" && day >= 18 ? 0.42 : 0.58)) return "crew";
-      if (agent.id === "ISS05" && r < 0.35) return currentRun === "b" && day >= 6 ? "harmony" : "zvezda";
+      if (agent.id === "ISS03" && stress >= 8 && r < (isNudgeRun() && day >= 11 ? 0.38 : 0.66)) return "crew";
+      if (agent.id === "ISS02" && stress >= 8 && r < (isNudgeRun() && day >= 18 ? 0.42 : 0.58)) return "crew";
+      if (agent.id === "ISS05" && r < 0.35) return isNudgeRun() && day >= 6 ? "harmony" : "zvezda";
       if (agent.id === "ISS06" && (day + index) % 4 <= 1) return "tranquility";
       if (agent.id === "ISS04" && r < 0.58) return "harmony";
       if (agent.id === "ISS07" && r < 0.42) return day >= 11 ? "cupola" : "harmony";
-      if (agent.id === "ISS09" && r < 0.46) return currentRun === "b" && day >= 11 ? "cupola" : "harmony";
+      if (agent.id === "ISS09" && r < 0.46) return isNudgeRun() && day >= 11 ? "cupola" : "harmony";
       if (agent.id === "ISS08" && day >= 28 && r < 0.42) return "destiny";
       if (day >= 45 && r < 0.24) return "cupola";
-      if (day >= 24 && currentRun === "b" && r > 0.76) return "destiny";
+      if (day >= 24 && isNudgeRun() && r > 0.76) return "destiny";
 
       const cycle = ["harmony", "destiny", "kibo", "columbus", "tranquility", "unity", "zvezda"];
       return cycle[(index + day) % cycle.length];
@@ -2376,7 +2406,7 @@
         return { states, counts, incidents: activeIncidents(day), frame };
       }
 
-      const states = agents.map((agent, index) => {
+      const states = agents.slice(0, expectedAgentCount()).map((agent, index) => {
         const stress = stressFor(agent, index, day);
         const module = placeFor(agent, index, day);
         const pos = positionInModule(module, index, day);
@@ -2417,7 +2447,7 @@
           severity: "repair",
           stateLabel: "修復中",
           title: `${incident.title}の修復`,
-          text: currentRun === "b"
+          text: isNudgeRun()
             ? `${incident.repairNudge}がきっかけになり、言い方や距離の取り方を調整している。`
             : "謝るタイミングが遅れ、気まずさを残したまま少しずつ通常運用へ戻る。"
         };
@@ -2523,7 +2553,7 @@
               : "共同生活の距離感を探り、食事と作業のリズムが固まり始める。"
         }
       ];
-      if (currentRun === "b") {
+      if (isNudgeRun()) {
         nudges.filter((nudge) => day >= nudge.start).forEach((nudge) => {
           items.push({
             name: nudge.name,
@@ -2574,7 +2604,7 @@
 
     function staticEventTimeline() {
       const items = [];
-      if (currentRun === "b") {
+      if (isNudgeRun()) {
         nudges.forEach((nudge) => {
           items.push(normalizeTimelineRow({
             event_id: nudge.id,
@@ -2601,7 +2631,7 @@
           label: plan.title,
           module_id: plan.module,
           participant_ids: plan.agents.join(";"),
-          related_object_id: currentRun === "b" ? plan.repairNudge : "",
+          related_object_id: isNudgeRun() ? plan.repairNudge : "",
           direction: plan.stateLabel,
           description: plan.text
         }));
@@ -2614,10 +2644,10 @@
           label: `${plan.title}の修復`,
           module_id: plan.module,
           participant_ids: plan.agents.join(";"),
-          related_object_id: currentRun === "b" ? plan.repairNudge : "",
+          related_object_id: isNudgeRun() ? plan.repairNudge : "",
           related_conflict_id: `CONF${String(index + 1).padStart(2, "0")}`,
-          direction: currentRun === "b" ? "ナッジ経由で距離再調整" : "時間経過で部分修復",
-          description: currentRun === "b"
+          direction: isNudgeRun() ? "ナッジ経由で距離再調整" : "時間経過で部分修復",
+          description: isNudgeRun()
             ? `${plan.repairNudge}が会話の入口を変え、短い修復を促す。`
             : "ナッジなしで、気まずさを残しながら通常運用へ戻る。"
         }));
@@ -2634,7 +2664,7 @@
     }
 
     function staticNudgeEffects() {
-      if (currentRun !== "b") return [];
+      if (!isNudgeRun()) return [];
       return nudges.map((nudge) => {
         const related = incidentPlans.filter((plan) => plan.repairNudge === nudge.id);
         const repaired = related.filter((plan) => currentStep >= incidentWindow(plan).repairStart);
@@ -2805,7 +2835,7 @@
           full: ""
         };
       }
-      if (currentRun === "b" && day >= 6 && day < 13) {
+      if (isNudgeRun() && day >= 6 && day < 13) {
         return {
           title: "持ち寄り棚のきっかけ",
           tag: "OBJ07",
@@ -2895,7 +2925,7 @@
         return {
           title: `${state.agent.name}の会話`,
           tag: moduleById[state.module].name,
-          tone: currentRun === "b" && day >= 6 ? "nudge" : "normal",
+          tone: isNudgeRun() && day >= 6 ? "nudge" : "normal",
           utterances: [
             { speaker: state.agent.name, text: lineForAgent(state, partner.agent.name, day, index + 3) },
             { speaker: partner.agent.name, text: replyForAgent(partner, state.agent.name, day, index + 3) }
@@ -2913,13 +2943,13 @@
         return salt % 2 === 0 ? "今日は少し静かにしていたい。" : "大丈夫と言いたいけど、少し疲れている。";
       }
       if (state.module === "harmony") {
-        return currentRun === "b" && day >= 6 ? "棚に置いてあったもの、見てもいい？" : "食事の時間、ここで合ってる？";
+        return isNudgeRun() && day >= 6 ? "棚に置いてあったもの、見てもいい？" : "食事の時間、ここで合ってる？";
       }
       if (state.module === "cupola") {
-        return currentRun === "b" && day >= 11 ? "この席なら少し話してもいい。" : "地球を見ていると、言葉が少なくなるね。";
+        return isNudgeRun() && day >= 11 ? "この席なら少し話してもいい。" : "地球を見ていると、言葉が少なくなるね。";
       }
       if (state.module === "crew") {
-        return currentRun === "b" && day >= 18 ? "マークが出ている間だけ、一人にしてもらえる？" : "少し休んだら戻る。";
+        return isNudgeRun() && day >= 18 ? "マークが出ている間だけ、一人にしてもらえる？" : "少し休んだら戻る。";
       }
       if (state.module === "tranquility") {
         return `${partnerName}、次の運動枠を使う？`;
@@ -3014,7 +3044,8 @@
     }
 
     function selectedState() {
-      return snapshot(currentStep).states.find((state) => state.agent.id === selectedAgentId);
+      const states = snapshot(currentStep).states;
+      return states.find((state) => state.agent.id === selectedAgentId) || states[0];
     }
 
     function agentText(state) {
@@ -3027,17 +3058,17 @@
         return `${incident.title}が起きて、${place}で相手の言い方や距離感に強く反応している。`;
       }
       if (state.agent.id === "ISS03") {
-        return currentRun === "b" && currentStep >= 11
+        return isNudgeRun() && currentStep >= 11
           ? `キューポラのサインがある日は、${place}で短く話せる可能性が残っている。`
           : `${place}にいても、帰る場所の不確かさが頭から離れない。`;
       }
       if (state.agent.id === "ISS04") {
-        return currentRun === "b" && currentStep >= 6
+        return isNudgeRun() && currentStep >= 6
           ? "持ち寄り棚や食事を使って、言葉より先に場を温めようとしている。"
           : "食事の話題で場をつなぐが、自分の疲れは後回しになりやすい。";
       }
       if (state.agent.id === "ISS05") {
-        return currentRun === "b" && currentStep >= 18
+        return isNudgeRun() && currentStep >= 18
           ? "個室聖域のルールで、静けさを求めることへの罪悪感が少し下がる。"
           : "静かにしたい気持ちと、孤立したくない気持ちがぶつかっている。";
       }
@@ -3091,7 +3122,7 @@
               y: pos.y
             };
           })
-        : currentRun === "b"
+        : isNudgeRun()
         ? nudges.filter((nudge) => currentStep >= nudge.start)
         : [];
       visibleNudges.forEach((nudge) => {
@@ -3109,21 +3140,30 @@
       });
     }
 
-    function renderAgents() {
-      agentLayer.innerHTML = "";
-      agents.forEach((agent) => {
-        const dot = document.createElement("button");
-        dot.type = "button";
-        dot.className = "agent-dot";
-        dot.id = `dot-${agent.id}`;
+    function renderAgents(data) {
+      const states = data?.states || snapshot(currentStep).states;
+      const activeIds = new Set(states.map((state) => state.agent.id));
+      agentLayer.querySelectorAll(".agent-dot").forEach((dot) => {
+        if (!activeIds.has(dot.dataset.agentId)) dot.remove();
+      });
+      states.forEach((state) => {
+        const agent = state.agent;
+        let dot = document.getElementById(`dot-${agent.id}`);
+        if (!dot) {
+          dot = document.createElement("button");
+          dot.type = "button";
+          dot.className = "agent-dot";
+          dot.id = `dot-${agent.id}`;
+          dot.dataset.agentId = agent.id;
+          dot.addEventListener("click", () => {
+            selectedAgentId = agent.id;
+            render();
+          });
+          agentLayer.appendChild(dot);
+        }
         dot.style.background = agent.color;
         dot.textContent = agent.short;
         dot.setAttribute("aria-label", agent.name);
-        dot.addEventListener("click", () => {
-          selectedAgentId = agent.id;
-          render();
-        });
-        agentLayer.appendChild(dot);
       });
     }
 
@@ -3141,6 +3181,7 @@
 
       data.states.forEach((state) => {
         const dot = document.getElementById(`dot-${state.agent.id}`);
+        if (!dot) return;
         const incident = activeIncidents(currentStep).find((item) => item.agents.includes(state.agent.id));
         dot.style.left = `calc(${state.pos.x}% - 14px)`;
         dot.style.top = `calc(${state.pos.y}% - 14px)`;
@@ -3228,7 +3269,7 @@
       const cupolaCount = data.counts.cupola || 0;
       const friction = activeIncidents(currentStep).filter((incident) => incident.severity !== "repair").length;
       const repairing = activeIncidents(currentStep).filter((incident) => incident.severity === "repair").length;
-      const repair = currentRun === "b"
+      const repair = isNudgeRun()
         ? clamp(Math.round(38 + runBoost(currentStep) * 7 - isolated * 5 - friction * 7 + repairing * 4 + cupolaCount * 2), 20, 82)
         : clamp(Math.round(28 - isolated * 4 - friction * 8 + repairing * 2 + cupolaCount), 8, 46);
       const privacyWait = Math.max(0, data.counts.crew - moduleById.crew.cap);
@@ -3344,7 +3385,7 @@
     function actionText(state) {
       const incident = activeIncidents(currentStep).find((item) => item.agents.includes(state.agent.id));
       if (incident?.severity === "repair") {
-        return currentRun === "b"
+        return isNudgeRun()
           ? "相手へ直接踏み込みすぎず、場に置かれたサインや棚を使って修復の糸口を作る。"
           : "距離を取りながら、次の共同作業で普通に戻るタイミングを探す。";
       }
@@ -3410,7 +3451,7 @@
 
     function renderNudgeEffects() {
       const items = nudgeEffectItems();
-      if (currentRun !== "b" && !items.length) {
+      if (!isNudgeRun() && !items.length) {
         nudgeEffectList.innerHTML = `<div class="empty-state">Run Aはナッジなしの比較条件です。Bへ切り替えると効果トレースを確認できます。</div>`;
         return;
       }
@@ -3525,7 +3566,7 @@
       const frame = generatedFrame(day);
       const activeNudge = frame?.active_objects?.length
         ? frame.active_objects.slice(-1)[0]
-        : currentRun === "b"
+        : isNudgeRun()
         ? nudges.filter((nudge) => day >= nudge.start).slice(-1)[0]
         : null;
       if (activeNudge) {
@@ -3571,12 +3612,17 @@
 
     function render() {
       const data = snapshot(currentStep);
+      if (!data.states.some((state) => state.agent.id === selectedAgentId) && data.states[0]) {
+        selectedAgentId = data.states[0].agent.id;
+      }
       stepSlider.max = String(maxStep());
       stepSlider.value = String(currentStep);
       stepChip.textContent = `ステップ ${currentStep}`;
       phaseLabel.textContent = data.frame?.phase || phaseFor(currentStep).name;
+      if (activeCrewLabel) activeCrewLabel.textContent = `${data.states.length}人`;
       renderBrandSubtitle();
       renderRunButtons();
+      renderAgents(data);
       updateMap(data);
       renderNudges();
       renderIncidents(data);
@@ -3646,7 +3692,6 @@
 
     renderModules();
     renderNudges();
-    renderAgents();
     render();
     loadGeneratedRuns();
   </script>
