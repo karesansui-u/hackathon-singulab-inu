@@ -77,6 +77,8 @@ runtime:
     codex_full_b: "${root}/examples/spatial_demo/configs/config.iss.codex.run_b.yaml"
     codex_fast_20x100_a: "${root}/examples/spatial_demo/configs/config.iss.codex.fast.20x100.run_a.yaml"
     codex_fast_20x100_b: "${root}/examples/spatial_demo/configs/config.iss.codex.fast.20x100.run_b.yaml"
+    codex_fast_20x100_d: "${root}/examples/spatial_demo/configs/config.iss.codex.fast.20x100.run_d.yaml"
+    codex_fast_20x100_e: "${root}/examples/spatial_demo/configs/config.iss.codex.fast.20x100.run_e.yaml"
     cursor_smoke_a: "${root}/examples/spatial_demo/configs/config.iss.cursor.smoke.run_a.yaml"
     cursor_smoke_b: "${root}/examples/spatial_demo/configs/config.iss.cursor.smoke.run_b.yaml"
     cursor_full_a: "${root}/examples/spatial_demo/configs/config.iss.cursor.run_a.yaml"
@@ -466,11 +468,14 @@ scenarios:
   run_c: "${pack}/scenarios/run_c.yaml"
   run_a_20x100: "${pack}/scenarios/run_a_20x100.yaml"
   run_b_20x100: "${pack}/scenarios/run_b_20x100.yaml"
+  run_d_20x100: "${pack}/scenarios/run_d_20x100.yaml"
+  run_e_20x100: "${pack}/scenarios/run_e_20x100.yaml"
 
 source_docs:
   - "${root}/docs/ISS/experiment_design_iss_20agents_100steps.md"
   - "${root}/docs/ISS/experiment_design_iss_b_main_10agents_50steps.md"
   - "${root}/docs/ISS/experiment_design_iss_run_c_nudge_removal_10agents_100steps.md"
+  - "${root}/docs/ISS/experiment_design_iss_rule_vs_nudge_20agents_100steps.md"
   - "${root}/docs/ISS/personas_iss_10agents.md"
   - "${root}/docs/ISS/places_iss_design.md"
   - "${root}/docs/ISS/iss_objects_menu.md"

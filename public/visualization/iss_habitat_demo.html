@@ -344,6 +344,11 @@
       background: var(--amber);
     }
 
+    .event-marker.is-rule {
+      top: 24px;
+      background: var(--cyan);
+    }
+
     .event-marker.is-conflict {
       top: 43px;
       background: var(--rose);
@@ -402,6 +407,10 @@
       background: var(--amber);
     }
 
+    .lane-dot.is-rule {
+      background: var(--cyan);
+    }
+
     .lane-dot.is-conflict {
       background: var(--rose);
     }
@@ -435,6 +444,11 @@
     .timeline-focus-item.is-conflict {
       border-color: rgba(225, 29, 72, 0.34);
       background: #fff1f2;
+    }
+
+    .timeline-focus-item.is-rule {
+      border-color: rgba(8, 145, 178, 0.32);
+      background: #ecfeff;
     }
 
     .timeline-focus-item.is-repair,
@@ -1685,6 +1699,8 @@
       <select class="run-select" id="runSelect" aria-label="実験データセット">
         <option value="b20">20人100step / B：ナッジあり</option>
         <option value="a20">20人100step / A：ナッジなし</option>
+        <option value="d20">追加実験D / 短時間会話ルールのみ</option>
+        <option value="e20">追加実験E / ナッジのみ</option>
         <option value="b10">10人50step / B：ナッジあり</option>
         <option value="a10">10人50step / A：ナッジなし</option>
         <option value="c">10人100step / C：ナッジ撤去後</option>
@@ -1756,12 +1772,13 @@
       <section class="panel">
         <div class="panel-header">
           <h2 class="panel-title">イベントタイムライン</h2>
-          <span class="panel-note">ナッジ / 摩擦 / 修復</span>
+          <span class="panel-note">ナッジ / ルール / 摩擦 / 修復</span>
         </div>
         <div class="panel-body event-timeline-body">
           <div class="event-timeline-rail" id="eventTimelineRail"></div>
           <div class="event-lanes">
             <span class="lane-key"><span class="lane-dot is-nudge"></span>ナッジ</span>
+            <span class="lane-key"><span class="lane-dot is-rule"></span>ルール</span>
             <span class="lane-key"><span class="lane-dot is-conflict"></span>摩擦・言い合い</span>
             <span class="lane-key"><span class="lane-dot is-repair"></span>修復</span>
           </div>
@@ -1979,6 +1996,8 @@
     const generatedRunDirs = {
       a20: ["../data/runs/iss20_no_nudge_100_ui_llm", "../data/runs/iss20_no_nudge_100_ui"],
       b20: ["../data/runs/iss20_nudge_100_ui_llm", "../data/runs/iss20_nudge_100_ui", "../data/runs/iss20_nudge_100_ui_gpt_probe"],
+      d20: ["../data/runs/iss20_rule_only_100_ui_llm", "../data/runs/iss20_rule_only_100_ui"],
+      e20: ["../data/runs/iss20_nudge_only_100_ui_llm", "../data/runs/iss20_nudge_only_100_ui"],
       a10: ["../data/runs/iss_no_nudge_smoke_ui_llm"],
       b10: ["../data/runs/iss_nudge_smoke_ui_llm"],
       c: ["../data/runs/iss10_nudge_removed_100_ui_claude_sonnet46"]
@@ -1988,6 +2007,8 @@
       a10: "a",
       b20: "b",
       b10: "b",
+      d20: "a",
+      e20: "b",
       c: "c"
     };
     let currentRun = "b20";
@@ -1998,7 +2019,7 @@
     let showNudges = true;
     let quietMode = false;
     let conversationMode = "important";
-    let generatedRuns = { a20: null, b20: null, a10: null, b10: null, c: null };
+    let generatedRuns = { a20: null, b20: null, d20: null, e20: null, a10: null, b10: null, c: null };
 
     const moduleLayer = document.getElementById("moduleLayer");
     const nudgeLayer = document.getElementById("nudgeLayer");
@@ -2039,6 +2060,8 @@
     function runLabel(runKey = currentRun) {
       if (runKey === "a20") return "20人100step / A：ナッジなし";
       if (runKey === "b20") return "20人100step / B：ナッジあり";
+      if (runKey === "d20") return "追加実験D / 短時間会話ルールのみ";
+      if (runKey === "e20") return "追加実験E / ナッジのみ";
       if (runKey === "a10") return "10人50step / A：ナッジなし";
       if (runKey === "b10") return "10人50step / B：ナッジあり";
       if (runKey === "c") return "C：撤去後";
@@ -2659,7 +2682,7 @@
       const rows = generatedRunData()?.eventTimeline || [];
       const items = rows.length ? rows.map(normalizeTimelineRow) : staticEventTimeline();
       return items
-        .filter((item) => ["nudge", "conflict", "repair"].includes(item.type))
+        .filter((item) => ["nudge", "rule", "conflict", "repair"].includes(item.type))
         .sort((a, b) => a.start - b.start || a.end - b.end || a.label.localeCompare(b.label));
     }
 
@@ -3400,6 +3423,7 @@
 
     function timelineTypeLabel(type) {
       if (type === "nudge") return "ナッジ";
+      if (type === "rule") return "ルール";
       if (type === "conflict") return "摩擦";
       if (type === "repair") return "修復";
       return "状態";
@@ -3424,7 +3448,7 @@
             style="left:${left}%;width:${width}%"
             title="S${String(item.start).padStart(2, "0")} ${typeLabel}：${label}"
             aria-label="S${item.start} ${label}"
-          >${item.type === "nudge" ? "N" : item.type === "repair" ? "R" : "!"}</button>
+          >${item.type === "nudge" ? "N" : item.type === "rule" ? "L" : item.type === "repair" ? "R" : "!"}</button>
         `;
       }).join("");
       eventTimelineRail.innerHTML = `${markerHtml}<div class="event-current-line" style="left:${currentLeft}%"></div>`;

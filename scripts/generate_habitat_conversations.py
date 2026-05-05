@@ -299,6 +299,8 @@ def relevant_history(
     step: int,
     limit: int,
 ) -> list[dict[str, Any]]:
+    if limit <= 0:
+        return []
     participants = set(participant_ids)
     rows = []
     for row in history:
@@ -330,6 +332,18 @@ def active_thread_context(
     }
 
 
+def run_condition_hint(context: dict[str, Any]) -> str:
+    active_objects = context.get("active_objects", []) or []
+    active_events = context.get("active_events", []) or []
+    has_object_event = any(row.get("event_type") == "object" for row in active_events if isinstance(row, dict))
+    has_rule_event = any(row.get("event_type") == "rule" for row in active_events if isinstance(row, dict))
+    if active_objects or has_object_event:
+        return "object_or_nudge_available"
+    if has_rule_event:
+        return "rule_only_no_nudge_objects"
+    return "no_nudge_objects"
+
+
 def build_prompt(
     thread: dict[str, str],
     existing_messages: list[dict[str, Any]],
@@ -354,6 +368,7 @@ def build_prompt(
         for participant_id in participant_ids
     ]
     context = active_thread_context(thread, frame)
+    condition_hint = run_condition_hint(context)
     recent_history = relevant_history(history, participant_ids, to_int(thread.get("step"), 0), max_history)
     draft_messages = [compact_message(row) for row in existing_messages]
     payload = {
@@ -367,6 +382,7 @@ def build_prompt(
             "current_summary": thread.get("summary", ""),
             "current_detail": thread.get("detail", ""),
         },
+        "run_condition_hint": condition_hint,
         "participants": participants,
         "current_context": context,
         "previous_related_messages": recent_history,
@@ -384,6 +400,9 @@ def build_prompt(
 - 参加者の personality / communication_style / stress / isolation / module を反映してください。
 - conflict は少し刺さる言い方、repair は完全解決ではなく距離の戻し方を出してください。
 - routine は作業・食事・静穏時間・個室・運動・地球観測・ナッジ周辺の具体的な短いやり取りにしてください。
+- run_condition_hint が rule_only_no_nudge_objects または no_nudge_objects の時は、ナッジ、善性オブジェクト、持ち寄り棚、OKサイン、聖域マーク、投票パネルという語を出さないでください。
+- run_condition_hint が object_or_nudge_available の時だけ、current_context.active_objects にある物や合図を発話に出してよいです。
+- 2発話以上の場合は、できるだけ同じspeaker_idを連続させず、実際の往復会話にしてください。
 - 発話者 speaker_id は participants 内だけ。listener_ids も participants 内だけ。
 - 2発話を基本に、必要なら3発話まで。utterance は各80字以内。
 

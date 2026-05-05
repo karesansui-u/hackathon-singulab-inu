@@ -20,12 +20,21 @@ RUN_DIRS = [
     "iss10_nudge_removed_100_ui_claude_sonnet46",
     "iss20_no_nudge_100_ui_llm",
     "iss20_nudge_100_ui_llm",
+    "iss20_rule_only_100_ui_llm",
+    "iss20_nudge_only_100_ui_llm",
     "iss20_no_nudge_100_ui",
     "iss20_nudge_100_ui",
+    "iss20_rule_only_100_ui",
+    "iss20_nudge_only_100_ui",
     "iss20_nudge_100_ui_gpt_probe",
     "iss_no_nudge_smoke_ui_llm",
     "iss_nudge_smoke_ui_llm",
 ]
+
+OPTIONAL_RUN_DIRS = {
+    "iss20_rule_only_100_ui_llm",
+    "iss20_nudge_only_100_ui_llm",
+}
 
 TEXT_SUFFIXES = {".html", ".json", ".jsonl", ".md", ".tsv", ".txt", ".yaml", ".yml"}
 
@@ -74,6 +83,8 @@ def build_public_site() -> None:
     for run_dir in RUN_DIRS:
         source = ROOT / "outputs" / "runs" / run_dir
         if not source.exists():
+            if run_dir in OPTIONAL_RUN_DIRS:
+                continue
             raise SystemExit(f"Missing run output: {source}")
         copytree_clean(source, PUBLIC / "data" / "runs" / run_dir)
 
@@ -120,6 +131,7 @@ GitHub Pages公開用の静的サイトです。
 - README preview GIF: `assets/iss20_100_demo.gif`
 - 20x100 demo video: `assets/iss20_100_demo.mp4`
 - 20x100: `data/runs/iss20_no_nudge_100_ui_llm`, `data/runs/iss20_nudge_100_ui_llm`
+- 20x100 Rule/Nudge追加実験: `data/runs/iss20_rule_only_100_ui_llm`, `data/runs/iss20_nudge_only_100_ui_llm`
 - 10x50: `data/runs/iss_no_nudge_smoke_ui_llm`, `data/runs/iss_nudge_smoke_ui_llm`
 - 10x100 Run C: `data/runs/iss10_nudge_removed_100_ui_claude_sonnet46`
 - Scripted fallback: `data/runs/iss20_no_nudge_100_ui`, `data/runs/iss20_nudge_100_ui`

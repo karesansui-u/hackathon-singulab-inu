@@ -1,0 +1,37 @@
+event_id	start_step	end_step	event_type	timeline_type	label	module_id	participant_ids	related_object_id	related_conflict_id	intensity	direction	description
+BASE01	1	10	baseline	baseline	初期適応					0.35	距離測定↑ 生活不安↑	ISSでの共同生活が始まり、互いの距離感と生活ルールを探る。
+OBJ07	6	100	object	nudge	持ち寄り棚	common_area		OBJ07		0.45	故郷共有↑ 弱い紐帯↑	共用エリアに持ち寄り棚が置かれ、写真・レシピ・手紙などを通じて背景を共有できる。
+CONF01	9	10	conflict	conflict	共用部の声量	common_area	ISS07;ISS02			0.5	すれ違い↑ 会話短縮↑	明るい会話が疲れている人には負荷として伝わり、共用部で声量をめぐるすれ違いが起きる。
+REPE01	11	13	repair	repair	共用部の声量の修復	common_area	ISS07;ISS02	OBJ07	CONF01	0.18	距離再調整↑ 継続観察↑	持ち寄り棚を使い、声量と休息合図について短く確認する。
+BASE02	11	30	baseline	baseline	関係形成					0.45	偶発対話↑ 小摩擦↑	共同食・作業・休息のリズムが見え始め、相性差と支え合いが同時に出る。
+OBJ06	11	100	object	nudge	話しかけてOKサイン	cupola		OBJ06		0.4	声かけ障壁↓ 相談↑	キューポラの一席に話しかけてOKサインが置かれ、孤立者に声をかけるきっかけが生まれる。
+CONF02	16	17	conflict	conflict	キューポラ声かけ	cupola	ISS03;ISS09	OBJ06		0.68	言い合い↑ 会話短縮↑	一人で地球を見たい人と、心配して声をかけたい人がぶつかる。
+REPE02	18	21	repair	repair	キューポラ声かけの修復	cupola	ISS03;ISS09	OBJ06	CONF02	0.18	距離再調整↑ 継続観察↑	OKサインを使い、声をかける前の確認と一人でいる時間について短く確認する。
+OBJ09	18	100	object	nudge	個室聖域マーク	crew_quarters		OBJ09		0.42	プライバシー尊重↑ 侵入不安↓	個室入口に聖域マークが置かれ、一人でいることを尊重する暗黙の合図ができる。
+OBJ03	24	100	object	nudge	リソース・スコアボード	common_area		OBJ03		0.38	協力可視化↑ 個人責め↓	水・酸素・食料の節約がチームスコアとして見え、個人責任ではなく共同達成として扱える。
+CONF03	25	26	conflict	conflict	個室待ち	crew_quarters	ISS02;ISS05	OBJ09		0.66	プライバシー圧↑ 会話短縮↑	一人になりたいタイミングが重なり、個室の順番と声かけの仕方に敏感になる。
+REPE03	27	30	repair	repair	個室待ちの修復	crew_quarters	ISS02;ISS05	OBJ09	CONF03	0.18	距離再調整↑ 継続観察↑	個室聖域マークを使い、個室利用の順番と再開時刻を短く確認する。
+OBJ10	28	100	object	nudge	モジュール移動投票パネル	lab_module		OBJ10		0.35	移動動機↑ こもり込み↓	別モジュールへ移動した人だけが答えられる二択パネルが置かれ、ゆるい移動理由になる。
+BASE03	31	60	baseline	baseline	中盤ストレス					0.6	疲労↑ 孤立リスク↑	閉鎖空間の疲れ、個室需要、役割偏りが蓄積する。
+CONF04	33	34	conflict	conflict	資源スコアの圧	common_area	ISS00;ISS08	OBJ03		0.55	責められ感↑ 会話短縮↑	資源表示が誰かを責める数字として見え始める。
+REPE04	35	38	repair	repair	資源スコアの圧の修復	common_area	ISS00;ISS08	OBJ03	CONF04	0.18	距離再調整↑ 継続観察↑	リソース・スコアボードを使い、資源表示を個人評価ではなく共同運用として扱うかを短く確認する。
+CONF05	42	43	conflict	conflict	運動枠の順番	exercise_area	ISS06;ISS08	OBJ10		0.5	順番摩擦↑ 会話短縮↑	身体ルーティンを守りたい人と、運動枠を逃したくない人の希望が重なる。
+REPE05	44	47	repair	repair	運動枠の順番の修復	exercise_area	ISS06;ISS08	OBJ10	CONF05	0.17	距離再調整↑ 継続観察↑	移動投票パネルを使い、運動枠の前後に何を確認するかを短く決める。
+CONF13	49	50	conflict	conflict	食事準備の遠慮	common_area	ISS13;ISS15			0.42	遠慮↑ 分担摩擦↑	Sitiが食事準備を引き受けすぎ、Amaraの速い提案が休む余地を狭めるように伝わる。
+REPE13	51	53	repair	repair	食事準備の遠慮の修復	common_area	ISS13;ISS15	OBJ07	CONF13	0.15	距離再調整↑ 継続観察↑	持ち寄り棚を使い、本人が休む選択を持てるように分担を短く確認する。
+CONF06	52	53	conflict	conflict	規律と自律	common_area	ISS18;ISS08	OBJ06		0.62	命令感↑ 反発↑	規律を重んじる声かけが、評価に敏感な相手には命令として響く。
+REPE06	54	58	repair	repair	規律と自律の修復	common_area	ISS18;ISS08	OBJ10	CONF06	0.18	距離再調整↑ 継続観察↑	移動投票パネルを使い、ルールの目的と本人が決める余地を短く確認する。
+CONF11	60	61	conflict	conflict	技術説明の距離	common_area	ISS10;ISS12			0.44	説明過多↑ 置いていかれ感↑	Raviの善意ある技術説明が、Tariqには抽象的で急ぎすぎる説明として伝わる。
+BASE04	61	80	baseline	baseline	後半再調整					0.5	修復機会↑ 気遣い疲れ↑	共同ルールと休息配分を見直し、修復できる関係と固定化する距離が分かれる。
+REPE11	62	65	repair	repair	技術説明の距離の修復	common_area	ISS10;ISS12	OBJ10	CONF11	0.16	距離再調整↑ 継続観察↑	移動投票パネルを使い、説明を短い手順に分けて確認する。
+CONF07	64	65	conflict	conflict	文字ルールの置き去り	common_area	ISS12;ISS17			0.55	疎外感↑ 説明摩擦↑	数値や文字で整理する運用が、文字に慣れない人には置き去りとして伝わる。
+REPE07	66	70	repair	repair	文字ルールの置き去りの修復	common_area	ISS12;ISS17	OBJ10	CONF07	0.17	距離再調整↑ 継続観察↑	移動投票パネルを使い、数値だけでなく実物と手順で確認する。
+CONF08	73	74	conflict	conflict	ケア役の偏り	common_area	ISS16;ISS14			0.54	援助疲れ↑ 役割固定↑	支える人が支えられる側になれず、励ましの言葉が負担として響く。
+REPE08	75	78	repair	repair	ケア役の偏りの修復	common_area	ISS16;ISS14	OBJ07	CONF08	0.17	距離再調整↑ 継続観察↑	持ち寄り棚を使い、支援を一人に集めない分担を短く確認する。
+BASE05	81	100	baseline	baseline	帰還準備					0.65	緊張↑ 意味づけ↑	帰還が近づき、別れ・評価・地上復帰への不安と感謝が同時に強まる。
+CONF12	82	83	conflict	conflict	援助の受け取り	common_area	ISS19;ISS15			0.45	助けたい気持ち↑ 拒否感↑	Karimの静かな援助が、Amaraには自分で立て直す余地を狭める関わりとして伝わる。
+CONF09	84	85	conflict	conflict	発信速度の圧	common_area	ISS15;ISS11			0.5	置いていかれ感↑ 回避↑	明るく速い発信が、役割喪失に敏感な相手には圧として伝わる。
+REPE12	84	87	repair	repair	援助の受け取りの修復	common_area	ISS19;ISS15	OBJ07	CONF12	0.15	距離再調整↑ 継続観察↑	持ち寄り棚を使い、助け方を先に尋ねる形に変えられるかを短く確認する。
+REPE09	86	89	repair	repair	発信速度の圧の修復	common_area	ISS15;ISS11	OBJ10	CONF09	0.16	距離再調整↑ 継続観察↑	移動投票パネルを使い、相手が返せる速度と役割依頼の出し方を短く確認する。
+CONF10	91	92	conflict	conflict	帰還前の助言	cupola	ISS08;ISS09			0.7	押しつけ感↑ 言い合い↑	年長者の助言が、緊張している相手には押しつけに聞こえる。
+REPE10	93	98	repair	repair	帰還前の助言の修復	cupola	ISS08;ISS09	OBJ07	CONF10	0.2	距離再調整↑ 継続観察↑	持ち寄り棚を使い、助言ではなく経験共有として話せるかを短く確認する。
