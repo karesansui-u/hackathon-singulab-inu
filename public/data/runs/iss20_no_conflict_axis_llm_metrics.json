@@ -1,0 +1,138 @@
+{
+  "run_a": {
+    "run_dir": "outputs/runs/iss20_no_nudge_no_conflict_100_ui_llm",
+    "data_source": "messages_jsonl",
+    "proxy_metrics": false,
+    "fallback_used": false,
+    "message_source_counts": {
+      "llm": 143
+    },
+    "llm_message_count": 143,
+    "scripted_message_count": 0,
+    "step_window": {
+      "start_step": 50,
+      "end_step": 100
+    },
+    "total_messages": 143,
+    "unique_interaction_pairs": 28,
+    "help_signal_messages": 0,
+    "reciprocity_rate": 1.0,
+    "repair_after_conflict_rate": 0.0,
+    "conflict_events": 0,
+    "bridge_agent_count": 1,
+    "bridge_agents": [
+      "ISS04"
+    ],
+    "load_fairness": 0.517,
+    "active_agents": 15,
+    "isolated_agents": [],
+    "sent_by_agent": {
+      "ISS00": 29,
+      "ISS01": 22,
+      "ISS02": 12,
+      "ISS03": 3,
+      "ISS04": 23,
+      "ISS05": 7,
+      "ISS06": 11,
+      "ISS07": 9,
+      "ISS08": 4,
+      "ISS09": 13,
+      "ISS11": 2,
+      "ISS14": 4,
+      "ISS15": 2,
+      "ISS16": 1,
+      "ISS17": 1
+    },
+    "received_by_agent": {
+      "ISS00": 17,
+      "ISS01": 18,
+      "ISS02": 7,
+      "ISS03": 5,
+      "ISS04": 37,
+      "ISS05": 5,
+      "ISS06": 10,
+      "ISS07": 7,
+      "ISS08": 8,
+      "ISS09": 21,
+      "ISS11": 1,
+      "ISS14": 2,
+      "ISS15": 1,
+      "ISS16": 2,
+      "ISS17": 2
+    },
+    "reasoning_entries_by_agent": {}
+  },
+  "run_b": {
+    "run_dir": "outputs/runs/iss20_nudge_only_no_conflict_100_ui_llm",
+    "data_source": "messages_jsonl",
+    "proxy_metrics": false,
+    "fallback_used": false,
+    "message_source_counts": {
+      "llm": 148
+    },
+    "llm_message_count": 148,
+    "scripted_message_count": 0,
+    "step_window": {
+      "start_step": 50,
+      "end_step": 100
+    },
+    "total_messages": 148,
+    "unique_interaction_pairs": 28,
+    "help_signal_messages": 0,
+    "reciprocity_rate": 1.0,
+    "repair_after_conflict_rate": 0.0,
+    "conflict_events": 0,
+    "bridge_agent_count": 1,
+    "bridge_agents": [
+      "ISS04"
+    ],
+    "load_fairness": 0.5072,
+    "active_agents": 15,
+    "isolated_agents": [],
+    "sent_by_agent": {
+      "ISS00": 31,
+      "ISS01": 24,
+      "ISS02": 13,
+      "ISS03": 3,
+      "ISS04": 23,
+      "ISS05": 6,
+      "ISS06": 11,
+      "ISS07": 10,
+      "ISS08": 4,
+      "ISS09": 13,
+      "ISS11": 2,
+      "ISS14": 4,
+      "ISS15": 2,
+      "ISS16": 1,
+      "ISS17": 1
+    },
+    "received_by_agent": {
+      "ISS00": 17,
+      "ISS01": 19,
+      "ISS02": 6,
+      "ISS03": 5,
+      "ISS04": 40,
+      "ISS05": 5,
+      "ISS06": 9,
+      "ISS07": 7,
+      "ISS08": 8,
+      "ISS09": 24,
+      "ISS11": 1,
+      "ISS14": 2,
+      "ISS15": 1,
+      "ISS16": 2,
+      "ISS17": 2
+    },
+    "reasoning_entries_by_agent": {}
+  },
+  "delta": {
+    "messages_diff_b_minus_a": 5,
+    "pairs_diff_b_minus_a": 0,
+    "help_signals_diff_b_minus_a": 0,
+    "reciprocity_rate_diff_b_minus_a": 0.0,
+    "repair_after_conflict_rate_diff_b_minus_a": 0.0,
+    "bridge_agent_count_diff_b_minus_a": 0,
+    "load_fairness_diff_b_minus_a": -0.0098,
+    "isolates_diff_b_minus_a": 0
+  }
+}

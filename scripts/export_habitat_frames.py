@@ -335,6 +335,8 @@ def timeline_type(event_type: str) -> str:
         return "conflict"
     if event_type == "repair":
         return "repair"
+    if event_type == "followup":
+        return "followup"
     return "baseline"
 
 
@@ -377,8 +379,12 @@ def build_event_timeline(
         event_type = event.get("event_type", "")
         participants = parse_agent_ids(event.get("target", ""))
         related_conflict_id = ""
-        if event_type == "repair":
-            event_name = event.get("event_name", "").replace("の修復", "")
+        if event_type in {"repair", "followup"}:
+            event_name = (
+                event.get("event_name", "")
+                .replace("の修復", "")
+                .replace("の追跡観測", "")
+            )
             participant_set = set(participants)
             for conflict in reversed(conflicts):
                 conflict_participants = set(parse_ids(str(conflict.get("participant_ids", ""))))
@@ -773,6 +779,14 @@ def conversation_summary_detail(
             f"当事者特性: {'; '.join(profiles)}。"
             f"修復要因: {direction or '短い確認と次回行動の調整'}。"
         )
+    elif event.get("event_type") == "followup":
+        summary = f"{'と'.join(names)}が「{event_name}」の後、同じ作業圏で再接触する。"
+        detail = (
+            f"{module_id}での追跡観測。"
+            f"当事者特性: {'; '.join(profiles)}。"
+            f"観測条件: {direction or '余韻観察と距離測定'}。"
+            "会話の成否は未指定で、短い作業確認、沈黙、回避、再接触のいずれも観測対象。"
+        )
     else:
         summary = f"{'と'.join(names)}が「{event_name}」で摩擦を起こす。"
         detail = (
@@ -811,6 +825,17 @@ def conversation_lines(event: dict[str, str], participants: list[str], agents_by
     b_name = agent_name(agents_by_id.get(b, {"agent_id": b}))
     event_type = event.get("event_type", "")
     event_name = event.get("event_name", "")
+    if event_type == "followup":
+        lines = [
+            ("次の作業、ここで続ける？", "続ける。長く話す余裕はまだない。"),
+            ("手順だけ確認しておきたい。", "手順なら聞ける。感情の話は後にしたい。"),
+            ("今は同じ場所でも大丈夫？", "短い確認だけなら大丈夫。"),
+        ]
+        first, second = choose_variant(lines, event.get("event_id", ""), a, b)
+        return [
+            {"speaker_id": a, "listener_ids": b, "utterance": first},
+            {"speaker_id": b, "listener_ids": a, "utterance": second},
+        ]
     if event_type == "repair":
         event_id = event.get("event_id", "")
         uses_object_repair = event_id.startswith(("REPB", "REPE"))
@@ -943,7 +968,7 @@ def build_conversations(
     state_by_agent = {state["agent_id"]: state for state in states}
 
     for event in events_for_step:
-        if event.get("event_type") not in {"conflict", "repair"}:
+        if event.get("event_type") not in {"conflict", "repair", "followup"}:
             continue
         participants = parse_ids(event.get("target", ""))
         if len(participants) < 2:
@@ -951,7 +976,7 @@ def build_conversations(
         conversation_id = f"conv_{run_id}_step{step:03d}_{event.get('event_id', '')}"
         module_id = event_module(event, objects_by_id)
         event_type = event.get("event_type", "")
-        tone = "repair" if event_type == "repair" else "trouble"
+        tone = "repair" if event_type == "repair" else "normal" if event_type == "followup" else "trouble"
         lines = conversation_lines(event, participants, agents_by_id)
         message_ids = [f"msg_{conversation_id}_{index:02d}" for index in range(1, len(lines) + 1)]
         summary, detail = conversation_summary_detail(event, participants, agents_by_id, module_id)
@@ -962,7 +987,7 @@ def build_conversations(
             "participant_ids": ";".join(participants),
             "module_id": module_id,
             "event_id": event.get("event_id", ""),
-            "conversation_type": "repair" if event_type == "repair" else "conflict",
+            "conversation_type": "repair" if event_type == "repair" else "followup" if event_type == "followup" else "conflict",
             "status": "repaired" if event_type == "repair" else "open",
             "tone": tone,
             "summary": summary,

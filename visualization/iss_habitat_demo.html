@@ -1701,6 +1701,12 @@
         <option value="a20">20人100step / A：ナッジなし</option>
         <option value="d20">追加実験D / 短時間会話ルールのみ</option>
         <option value="e20">追加実験E / ナッジのみ</option>
+        <option value="a20nr">追加軸A / 修復イベントなし</option>
+        <option value="e20nr">追加軸E / ナッジのみ・修復イベントなし</option>
+        <option value="a20anr">追加軸A / 全期間修復イベントなし</option>
+        <option value="e20anr">追加軸E / ナッジのみ・全期間修復イベントなし</option>
+        <option value="a20nc">追加軸A / 全期間喧嘩イベントなし</option>
+        <option value="e20nc">追加軸E / ナッジのみ・全期間喧嘩イベントなし</option>
         <option value="b10">10人50step / B：ナッジあり</option>
         <option value="a10">10人50step / A：ナッジなし</option>
         <option value="c">10人100step / C：ナッジ撤去後</option>
@@ -1998,6 +2004,12 @@
       b20: ["../outputs/runs/iss20_nudge_100_ui_llm", "../outputs/runs/iss20_nudge_100_ui", "../outputs/runs/iss20_nudge_100_ui_gpt_probe"],
       d20: ["../outputs/runs/iss20_rule_only_100_ui_llm", "../outputs/runs/iss20_rule_only_100_ui"],
       e20: ["../outputs/runs/iss20_nudge_only_100_ui_llm", "../outputs/runs/iss20_nudge_only_100_ui"],
+      a20nr: ["../outputs/runs/iss20_no_nudge_no_repair_100_ui_llm", "../outputs/runs/iss20_no_nudge_no_repair_100_ui"],
+      e20nr: ["../outputs/runs/iss20_nudge_only_no_repair_100_ui_llm", "../outputs/runs/iss20_nudge_only_no_repair_100_ui"],
+      a20anr: ["../outputs/runs/iss20_no_nudge_all_no_repair_100_ui_llm", "../outputs/runs/iss20_no_nudge_all_no_repair_100_ui"],
+      e20anr: ["../outputs/runs/iss20_nudge_only_all_no_repair_100_ui_llm", "../outputs/runs/iss20_nudge_only_all_no_repair_100_ui"],
+      a20nc: ["../outputs/runs/iss20_no_nudge_no_conflict_100_ui_llm", "../outputs/runs/iss20_no_nudge_no_conflict_100_ui"],
+      e20nc: ["../outputs/runs/iss20_nudge_only_no_conflict_100_ui_llm", "../outputs/runs/iss20_nudge_only_no_conflict_100_ui"],
       a10: ["../outputs/runs/iss_no_nudge_smoke_ui_llm", "../outputs/runs/iss_no_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_a"],
       b10: ["../outputs/runs/iss_nudge_smoke_ui_llm", "../outputs/runs/iss_nudge_smoke_ui", "../outputs/runs/iss_habitat_run_b"],
       c: ["../outputs/runs/iss10_nudge_removed_100_ui_claude_sonnet46"]
@@ -2009,6 +2021,12 @@
       b10: "b",
       d20: "a",
       e20: "b",
+      a20nr: "a",
+      e20nr: "b",
+      a20anr: "a",
+      e20anr: "b",
+      a20nc: "a",
+      e20nc: "b",
       c: "c"
     };
     let currentRun = "b20";
@@ -2019,7 +2037,7 @@
     let showNudges = true;
     let quietMode = false;
     let conversationMode = "important";
-    let generatedRuns = { a20: null, b20: null, d20: null, e20: null, a10: null, b10: null, c: null };
+    let generatedRuns = { a20: null, b20: null, d20: null, e20: null, a20nr: null, e20nr: null, a20anr: null, e20anr: null, a20nc: null, e20nc: null, a10: null, b10: null, c: null };
 
     const moduleLayer = document.getElementById("moduleLayer");
     const nudgeLayer = document.getElementById("nudgeLayer");
@@ -2062,6 +2080,12 @@
       if (runKey === "b20") return "20人100step / B：ナッジあり";
       if (runKey === "d20") return "追加実験D / 短時間会話ルールのみ";
       if (runKey === "e20") return "追加実験E / ナッジのみ";
+      if (runKey === "a20nr") return "追加軸A / 修復イベントなし";
+      if (runKey === "e20nr") return "追加軸E / ナッジのみ・修復イベントなし";
+      if (runKey === "a20anr") return "追加軸A / 全期間修復イベントなし";
+      if (runKey === "e20anr") return "追加軸E / ナッジのみ・全期間修復イベントなし";
+      if (runKey === "a20nc") return "追加軸A / 全期間喧嘩イベントなし";
+      if (runKey === "e20nc") return "追加軸E / ナッジのみ・全期間喧嘩イベントなし";
       if (runKey === "a10") return "10人50step / A：ナッジなし";
       if (runKey === "b10") return "10人50step / B：ナッジあり";
       if (runKey === "c") return "C：撤去後";
@@ -3010,7 +3034,7 @@
       if (!data) return null;
       let threads = data.threadsByStep.get(Number(day)) || [];
       if (conversationMode === "important") {
-        const important = threads.filter((thread) => ["conflict", "repair", "object_mediated"].includes(thread.conversation_type));
+        const important = threads.filter((thread) => ["conflict", "repair", "object_mediated", "followup"].includes(thread.conversation_type));
         threads = important.length ? important : threads.slice(-1);
       } else if (conversationMode === "selected") {
         threads = threads.filter((thread) => splitIds(thread.participant_ids).includes(selectedAgentId));
@@ -3432,6 +3456,7 @@
       if (type === "rule") return "ルール";
       if (type === "conflict") return "摩擦";
       if (type === "repair") return "修復";
+      if (type === "followup") return "追跡";
       return "状態";
     }
 
@@ -3482,7 +3507,7 @@
     function renderNudgeEffects() {
       const items = nudgeEffectItems();
       if (!isNudgeRun() && !items.length) {
-        nudgeEffectList.innerHTML = `<div class="empty-state">Run Aはナッジなしの比較条件です。Bへ切り替えると効果トレースを確認できます。</div>`;
+        nudgeEffectList.innerHTML = `<div class="empty-state">Aはナッジなしの比較条件です。Bへ切り替えると効果トレースを確認できます。</div>`;
         return;
       }
       nudgeEffectList.innerHTML = items.map((item) => {

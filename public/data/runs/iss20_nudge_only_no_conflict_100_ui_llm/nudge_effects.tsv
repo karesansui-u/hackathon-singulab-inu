@@ -1,0 +1,6 @@
+effect_id	object_id	object_name	start_step	module_id	target_event_ids	repaired_event_ids	conflict_event_ids	affected_agent_ids	first_repair_step	status	effect_summary	effect_path
+effect_OBJ07	OBJ07	持ち寄り棚	6	common_area						observing	本、写真、レシピカード、家族の手紙などを一つ置き、一つ取る棚。物を通じて故郷と人生を共有する。	S06 持ち寄り棚
+effect_OBJ06	OBJ06	話しかけてOKサイン	11	cupola						observing	座席の一つに、ここにいる人は話しかけてOKというサインが置かれる。声かけの心理的障壁を下げる。	S11 話しかけてOKサイン
+effect_OBJ09	OBJ09	個室聖域マーク	18	crew_quarters						observing	入口に文化横断的な聖域サインを置く。入室中は声をかけない暗黙ルールを形成する。	S18 個室聖域マーク
+effect_OBJ03	OBJ03	リソース・スコアボード	24	common_area						observing	水・酸素・食料の節約量がリアルタイムで表示される。個人競争ではなく全員のチームスコアとして見える。	S24 リソース・スコアボード
+effect_OBJ10	OBJ10	モジュール移動投票パネル	28	lab_module						observing	今日の質問に答えるには別モジュールへ移動する必要がある。こもりがちな人をゆるやかに引き出す。	S28 モジュール移動投票パネル

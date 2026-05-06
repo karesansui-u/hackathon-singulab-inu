@@ -1,0 +1,12 @@
+runtime:
+  default_profile: "codex_fast_20x100_e_all_no_repair"
+scenario_label: "run_e_20agents_100steps_nudge_only_all_no_repair_events"
+time:
+  steps: 100
+data:
+  agents: "${pack}/data/agents_20.tsv"
+  personas_20: "${pack}/data/personas_20.tsv"
+  places: "${pack}/data/places_iss_20.tsv"
+  time_schedule: "${pack}/data/time_schedule_100.tsv"
+  relationship_seed: "${pack}/data/relationship_seed_20.tsv"
+  events: "${pack}/data/events_run_e_all_no_repair_20x100.tsv"

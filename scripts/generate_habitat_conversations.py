@@ -172,6 +172,7 @@ def write_generation_outputs(
             "failed_thread_count": failed,
             "start_step": args.start_step,
             "end_step": args.end_step,
+            "conversation_types": args.conversation_types,
             "history_size": args.history_size,
             "llm_config": str(args.llm_config or ""),
             "model": llm_config.get("model", ""),
@@ -399,6 +400,7 @@ def build_prompt(
 - 同じ定型文を繰り返さないでください。
 - 参加者の personality / communication_style / stress / isolation / module を反映してください。
 - conflict は少し刺さる言い方、repair は完全解決ではなく距離の戻し方を出してください。
+- followup は摩擦後の追跡観測です。解決を前提にせず、短い作業確認、沈黙、回避、ためらい、自然な再接触のどれかを出してください。
 - routine は作業・食事・静穏時間・個室・運動・地球観測・ナッジ周辺の具体的な短いやり取りにしてください。
 - run_condition_hint が rule_only_no_nudge_objects または no_nudge_objects の時は、ナッジ、善性オブジェクト、持ち寄り棚、OKサイン、聖域マーク、投票パネルという語を出さないでください。
 - run_condition_hint が object_or_nudge_available の時だけ、current_context.active_objects にある物や合図を発話に出してよいです。
@@ -444,6 +446,8 @@ def normalize_llm_payload(
     event_id = thread.get("event_id", "")
     if thread.get("conversation_type") == "routine" and not event_id:
         permitted_tones = {"normal"}
+    elif thread.get("conversation_type") == "followup":
+        permitted_tones = {"normal", "caution", "nudge", "repair"}
     elif thread_tone == "repair" or event_id.startswith(("REP", "REPA", "REPB")):
         permitted_tones = {"repair", "normal"}
     elif thread_tone == "trouble" or event_id.startswith("CONF"):
@@ -508,6 +512,12 @@ def should_generate_step(step: int, start_step: int, end_step: int, limit_thread
     return True
 
 
+def should_generate_conversation_type(thread: dict[str, Any], allowed_types: set[str] | None) -> bool:
+    if not allowed_types:
+        return True
+    return str(thread.get("conversation_type", "")) in allowed_types
+
+
 def is_llm_generated_thread(thread: dict[str, Any], existing_messages: list[dict[str, Any]]) -> bool:
     if thread.get("summary_source") != "llm_summary":
         return False
@@ -526,6 +536,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--start-step", type=int, default=1)
     parser.add_argument("--end-step", type=int, default=50)
     parser.add_argument("--limit-threads", type=int, default=None, help="Generate only N threads for smoke testing")
+    parser.add_argument(
+        "--conversation-types",
+        default="",
+        help="Comma-separated conversation_type filter, e.g. conflict,followup",
+    )
     parser.add_argument("--history-size", type=int, default=12)
     parser.add_argument(
         "--only-non-llm",
@@ -591,6 +606,11 @@ def main() -> None:
     history: list[dict[str, Any]] = []
     generated = 0
     failed = 0
+    allowed_types = {
+        item.strip()
+        for item in args.conversation_types.split(",")
+        if item.strip()
+    } or None
 
     def checkpoint(index: int, status: str) -> None:
         remaining_threads = ordered_threads[index + 1:]
@@ -619,6 +639,8 @@ def main() -> None:
         existing = messages_by_conversation.get(thread.get("conversation_id", ""), [])
         generated_this_thread = False
         should_generate = should_generate_step(step, args.start_step, args.end_step, args.limit_threads, generated)
+        if should_generate and not should_generate_conversation_type(thread, allowed_types):
+            should_generate = False
         if args.only_non_llm and is_llm_generated_thread(thread, existing):
             should_generate = False
         if not args.mock and should_generate:

@@ -1,0 +1,6 @@
+effect_id	object_id	object_name	start_step	module_id	target_event_ids	repaired_event_ids	conflict_event_ids	affected_agent_ids	first_repair_step	status	effect_summary	effect_path
+effect_OBJ07	OBJ07	持ち寄り棚	6	common_area	OBSE01			ISS02;ISS07		observing	本、写真、レシピカード、家族の手紙などを一つ置き、一つ取る棚。物を通じて故郷と人生を共有する。	S06 持ち寄り棚 → S11 共用部の声量の追跡観測
+effect_OBJ06	OBJ06	話しかけてOKサイン	11	cupola	CONF02;OBSE02;CONF06		CONF02;CONF06	ISS03;ISS08;ISS09;ISS18		observing	キューポラ声かけ、規律と自律に関連。摩擦の発火後に、修復の入口になるかを観測中。	S11 話しかけてOKサイン → S16 キューポラ声かけ → S18 キューポラ声かけの追跡観測 → S52 規律と自律
+effect_OBJ09	OBJ09	個室聖域マーク	18	crew_quarters	CONF03;OBSE03		CONF03	ISS02;ISS05		observing	個室待ちに関連。摩擦の発火後に、修復の入口になるかを観測中。	S18 個室聖域マーク → S25 個室待ち → S27 個室待ちの追跡観測
+effect_OBJ03	OBJ03	リソース・スコアボード	24	common_area	CONF04;OBSE04		CONF04	ISS00;ISS08		observing	資源スコアの圧に関連。摩擦の発火後に、修復の入口になるかを観測中。	S24 リソース・スコアボード → S33 資源スコアの圧 → S35 資源スコアの圧の追跡観測
+effect_OBJ10	OBJ10	モジュール移動投票パネル	28	lab_module	CONF05;OBSE05		CONF05	ISS06;ISS08		observing	運動枠の順番に関連。摩擦の発火後に、修復の入口になるかを観測中。	S28 モジュール移動投票パネル → S42 運動枠の順番 → S44 運動枠の順番の追跡観測
